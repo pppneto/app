@@ -27,6 +27,7 @@ class Main extends Component  {
     }
 }
 
+
 const styles = StyleSheet.create({
     mainView: {
         flex: 1
