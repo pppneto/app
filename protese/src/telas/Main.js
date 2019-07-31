@@ -2,11 +2,26 @@ import React, { Component } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import Orientation from 'react-native-orientation'
 
 
 class Main extends Component  {
 
+    componentDidMount(){
+        const willFocus = this.props.navigation.addListener('willFocus', payload => this.componentWillFocus(payload))
+    }
+
+    componentWillFocus(){
+        Orientation.lockToPortrait()
+    }
+
+    componentWillUnmount(){
+        willFocus.remove()
+    }
+    
+
     render() {
+
         return (
             <View style={styles.mainView}>
 
