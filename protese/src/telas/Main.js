@@ -64,15 +64,16 @@ class Main extends Component  {
             this.setState({medio:!this.state.medio,texto:"medio",palavra})
         }
         else if(dedo == 4){
-            if(this.state.anelar){
-                palavra[26] = '0'
-                palavra[27] = '0'
+            if(this.state.polegar){
+                palavra = palavra.substr(0,17) + '0' + palavra.substr(18,31)
+                palavra[18] = '0'
             }
             else{
-            palavra[26] = '1'
-            palavra[27] = '8'
+                palavra= palavra.substr(0,17) + '1' + palavra.substr(18,31)
+                palavra[18] = '8'
+                
             }
-            this.setState({anelar:!this.state.anelar,texto:"anelar",palavra})
+            this.setState({medio:!this.state.medio,texto:"medio",medio:medio})
         }
         else if(dedo == 5){
             if(this.state.minimo){
