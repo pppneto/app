@@ -66,10 +66,27 @@ class Main extends Component  {
         }
         else if(dedo == 4){
             this.setState({anelar:!this.state.anelar,texto:"anelar"})
+        if(this.state.anelar){
+            palavra[26] = '0'
+            palavra[27] = '0'
+        }
+        else {
+            palavra[26] = '1'
+            palavra[27] = '8'
+        }
+
 
         }
         else if(dedo == 5){
             this.setState({minimo:!this.state.minimo,texto:"minimo"})
+            if(this.state.anelar){
+                palavra[29] = '0'
+                palavra[30] = '0'
+            }
+            else {
+                palavra[29] = '1'
+                palavra[30] = '8'
+            }
 
         }
 
