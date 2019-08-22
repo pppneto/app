@@ -11,7 +11,8 @@ class Main extends Component  {
         indicador: false,
         medio: false,
         anelar: false,
-        minimo: false
+        minimo: false,
+        palavra: 'A000000000000000F000000000000000'
     }
     componentDidMount(){
         const willFocus = this.props.navigation.addListener('willFocus', payload => this.componentWillFocus(payload))
@@ -26,15 +27,40 @@ class Main extends Component  {
     }
     
     clicaDedos(dedo){
+        let palavra = this.state.palavra
 
         if(dedo == 1){
+            if(this.state.polegar){
+                palavra[17] = '0'
+                palavra[18] = '0'
+            }
+            else{
+                palavra[17] = '1'
+                palavra[18] = '8'
+            }
             this.setState({polegar:!this.state.polegar,texto:"polegar"})
         }
         else if(dedo == 2){
+            if(this.state.indicador){
+                palavra[20] = '0'
+                palavra[21] = '0'
+            }
+            else{
+                palavra[20] = '1'
+                palavra[21] = '8'
+            }
             this.setState({indicador:!this.state.indicador,texto:"indicador"})
 
         }
         else if(dedo == 3){
+            if(this.state.medio){
+                palavra[23] = '0'
+                palavra[24] = '0'
+            }
+            else{
+                palavra[23] = '1'
+                palavra[24] = '8'
+            }
             this.setState({medio:!this.state.medio,texto:"medio"})
 
         }
@@ -55,8 +81,8 @@ class Main extends Component  {
             <View style={styles.mainView}>
                     <View style={styles.viewBotoes}>
                         <Button
-                        onPress={() => 
-                        this.clicaDedos(1)
+                        onPress={() =>
+                            this.clicaDedos(1)
                         }
                         title="Polegar"
                         color={this.state.polegar == true ? "#0000ff" : "#000000"}
@@ -89,6 +115,9 @@ class Main extends Component  {
                         title="Mínimo"
                         color={this.state.minimo == true ? "#0000ff" : "#000000"}
                         />
+                        <Text>
+                            {this.state.palavra}
+                        </Text>
                     </View>
 
                 <ActionButton>
