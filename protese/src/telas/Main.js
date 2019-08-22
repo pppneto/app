@@ -31,14 +31,15 @@ class Main extends Component  {
 
         if(dedo == 1){
             if(this.state.polegar){
-                palavra[17] = '0'
+                palavra = palavra.substr(0,17) + '0' + palavra.substr(18,31)
                 palavra[18] = '0'
             }
             else{
-                palavra[17] = '1'
+                palavra= palavra.substr(0,17) + '1' + palavra.substr(18,31)
                 palavra[18] = '8'
+                
             }
-            this.setState({polegar:!this.state.polegar,texto:"polegar"})
+            this.setState({polegar:!this.state.polegar,texto:"polegar",palavra:palavra})
         }
         else if(dedo == 2){
             if(this.state.indicador){
@@ -49,8 +50,7 @@ class Main extends Component  {
                 palavra[20] = '1'
                 palavra[21] = '8'
             }
-            this.setState({indicador:!this.state.indicador,texto:"indicador"})
-
+            this.setState({indicador:!this.state.indicador,texto:"indicador",palavra})
         }
         else if(dedo == 3){
             if(this.state.medio){
@@ -61,33 +61,29 @@ class Main extends Component  {
                 palavra[23] = '1'
                 palavra[24] = '8'
             }
-            this.setState({medio:!this.state.medio,texto:"medio"})
-
+            this.setState({medio:!this.state.medio,texto:"medio",palavra})
         }
         else if(dedo == 4){
-            this.setState({anelar:!this.state.anelar,texto:"anelar"})
-        if(this.state.anelar){
-            palavra[26] = '0'
-            palavra[27] = '0'
-        }
-        else {
+            if(this.state.anelar){
+                palavra[26] = '0'
+                palavra[27] = '0'
+            }
+            else{
             palavra[26] = '1'
             palavra[27] = '8'
-        }
-
-
+            }
+            this.setState({anelar:!this.state.anelar,texto:"anelar",palavra})
         }
         else if(dedo == 5){
-            this.setState({minimo:!this.state.minimo,texto:"minimo"})
-            if(this.state.anelar){
+            if(this.state.minimo){
                 palavra[29] = '0'
                 palavra[30] = '0'
             }
-            else {
+            else{
                 palavra[29] = '1'
                 palavra[30] = '8'
             }
-
+            this.setState({minimo:!this.state.minimo,texto:"minimo",palavra})
         }
 
     
@@ -132,10 +128,12 @@ class Main extends Component  {
                         title="Mínimo"
                         color={this.state.minimo == true ? "#0000ff" : "#000000"}
                         />
-                        <Text>
-                            {this.state.palavra}
-                        </Text>
+                        
                     </View>
+                        
+                    <Text>
+                            {this.state.palavra}
+                    </Text>
 
                 <ActionButton>
 
