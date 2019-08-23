@@ -64,6 +64,7 @@ class Main extends Component  {
             this.setState({medio:!this.state.medio,texto:"medio",palavra})
         }
         else if(dedo == 4){
+
             if(this.state.anelar){
                 palavra = palavra.substr(0,26) + '0' + palavra.substr(27,31)
                 palavra = palavra.substr(0,27) + '0' + palavra.substr(28,31)
@@ -71,8 +72,9 @@ class Main extends Component  {
             else{
                 palavra = palavra.substr(0,26) + '1' + palavra.substr(27,31)
                 palavra = palavra.substr(0,27) + '8' + palavra.substr(28,31)
+
             }
-            this.setState({anelar:!this.state.anelar,texto:"anelar",palavra})
+            this.setState({medio:!this.state.medio,texto:"medio",palavra})
         }
         else if(dedo == 5){
             if(this.state.minimo){
