@@ -32,56 +32,56 @@ class Main extends Component  {
         if(dedo == 1){
             if(this.state.polegar){
                 palavra = palavra.substr(0,17) + '0' + palavra.substr(18,31)
-                palavra[18] = '0'
+                palavra = palavra.substr(0,18) + '0' + palavra.substr(19,31)
             }
             else{
-                palavra= palavra.substr(0,17) + '1' + palavra.substr(18,31)
-                palavra[18] = '8'
+                palavra = palavra.substr(0,17) + '1' + palavra.substr(18,31)
+                palavra = palavra.substr(0,18) + '8' + palavra.substr(19,31)
                 
             }
             this.setState({polegar:!this.state.polegar,texto:"polegar",palavra:palavra})
         }
         else if(dedo == 2){
             if(this.state.indicador){
-                palavra[20] = '0'
-                palavra[21] = '0'
+                palavra = palavra.substr(0,20) + '0' + palavra.substr(21,31)
+                palavra = palavra.substr(0,21) + '0' + palavra.substr(22,31)
             }
             else{
-                palavra[20] = '1'
-                palavra[21] = '8'
+                palavra = palavra.substr(0,20) + '1' + palavra.substr(21,31)
+                palavra = palavra.substr(0,21) + '8' + palavra.substr(22,31)
             }
-            this.setState({indicador:!this.state.indicador,texto:"indicador",palavra})
+            this.setState({indicador:!this.state.indicador,texto:"indicador",palavra:palavra})
         }
         else if(dedo == 3){
             if(this.state.medio){
-                palavra[23] = '0'
-                palavra[24] = '0'
+                palavra = palavra.substr(0,23) + '0' + palavra.substr(24,31)
+                palavra = palavra.substr(0,24) + '0' + palavra.substr(25,31)
             }
             else{
-                palavra[23] = '1'
-                palavra[24] = '8'
+                palavra = palavra.substr(0,23) + '1' + palavra.substr(24,31)
+                palavra = palavra.substr(0,24) + '8' + palavra.substr(25,31)
             }
             this.setState({medio:!this.state.medio,texto:"medio",palavra})
         }
         else if(dedo == 4){
             if(this.state.anelar){
-                palavra[26] = '0'
-                palavra[27] = '0'
+                palavra = palavra.substr(0,26) + '0' + palavra.substr(27,31)
+                palavra = palavra.substr(0,27) + '0' + palavra.substr(28,31)
             }
             else{
-            palavra[26] = '1'
-            palavra[27] = '8'
+                palavra = palavra.substr(0,26) + '1' + palavra.substr(27,31)
+                palavra = palavra.substr(0,27) + '8' + palavra.substr(28,31)
             }
             this.setState({anelar:!this.state.anelar,texto:"anelar",palavra})
         }
         else if(dedo == 5){
             if(this.state.minimo){
-                palavra[29] = '0'
-                palavra[30] = '0'
+                palavra = palavra.substr(0,29) + '0' + '0' 
+                palavra = palavra.substr(0,30) + '0' + '0'
             }
             else{
-                palavra[29] = '1'
-                palavra[30] = '8'
+                palavra = palavra.substr(0,29) + '1' + '0' 
+                palavra = palavra.substr(0,30) + '8' + '0'
             }
             this.setState({minimo:!this.state.minimo,texto:"minimo",palavra})
         }
