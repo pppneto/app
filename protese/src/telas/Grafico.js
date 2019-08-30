@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { StyleSheet, View, Text ,TouchableOpacity } from 'react-native'
-import { AreaChart, Grid } from 'react-native-svg-charts'
+import React, { Component, } from 'react'
+import { StyleSheet, View, Text ,TouchableOpacity, ScrollView, TouchableWithoutFeedback, Dimensions } from 'react-native'
+import { AreaChart, Grid, LineChart } from 'react-native-svg-charts'
 import Orientation from 'react-native-orientation'
 import * as shape from 'd3-shape'
 import Scale from 'd3-scale'
@@ -39,27 +39,37 @@ addData = () => {
   
  
         return (
-            <View>
-                
-            <AreaChart
-                style={{ height: 260}}
-                data={ this.state.data }
-                svg={{stroke: 'rgb(0,0,0)', strokeWidth:3, fill: 'rgba(30,144,255)', fillOpacity: 0.1, fillRule:'evenodd'  }}
-                contentInset={{ top: 20, left: 0, right: 50, bottom: 20 }}
-                curve = {shape.curveMonotoneX}
-                yMin = {0}
-                yMax = {150}
-                
-            >
-                <Grid/>
-            </AreaChart>    
-
-            <TouchableOpacity onPress = {() => this.addData()}>
-            <View style = {styles.b_grafico}>
+            <View style= {styles.mainView}>
+                <ScrollView style={{height: 400}}>
+                    <TouchableWithoutFeedback onPress = {() => this.addData()}>
             
-            </View>
-            </TouchableOpacity>
-            
+                        <View style>    
+                            <AreaChart
+                                style={styles.area_style}
+                                data={ this.state.data }
+                                svg={{fill: 'rgba(30,144,255)', fillOpacity: 0.3, fillRule:'evenodd'  }}
+                                contentInset={{ top: 20, left: 0, right: 50, bottom: 20 }}
+                                //curve = {shape.curveMonotoneX}
+                                yMin = {-150}
+                                yMax = {150}
+                            >       
+                                
+                                <Grid></Grid>
+                            </AreaChart>  
+                            <LineChart 
+                                style={styles.line_style}
+                                data={ this.state.data }
+                                svg = {{stroke: '#fff'}}
+                                //curve = {shape.curveMonotoneX}
+                                contentInset={{ top: 20, left: 0, right: 50, bottom: 20 }}
+                                yMin = {-150}
+                                yMax = {150}>
+                                </LineChart>  
+                        </View>
+                    </TouchableWithoutFeedback>
+    
+                </ScrollView>
+                
             </View>
             
         )
@@ -70,20 +80,21 @@ addData = () => {
 
 const styles = StyleSheet.create({
     mainView: {
-        flex:1,
-        alignItems: 'center',
-        justifyContent: 'center',borderRadius: 15
+        flex: 1,
+        backgroundColor: '#313131'
         },
-    b_grafico:{
-        borderRadius: 20,
-        borderWidth: 1,
-        height: 40,
-        width: 40,
-        borderColor: 'red',
-        backgroundColor: 'gray'
+    text_style: {
+        flexDirection: 'column'
     },
-    back_grafico:{
-        backgroundColor:'#000'
+    area_style: {
+        height: 800
+    },
+    line_style: {
+        height: 800,
+        width: Dimensions.get('window').width,
+        position: 'absolute',
+        top: 0,
+        left: 0
     }    
 
     
