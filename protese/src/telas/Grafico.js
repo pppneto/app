@@ -1,10 +1,13 @@
-import React, { Component, } from 'react'
-import { StyleSheet, View, Text ,TouchableOpacity, ScrollView, TouchableWithoutFeedback, Dimensions } from 'react-native'
-import { AreaChart, Grid, LineChart } from 'react-native-svg-charts'
+import React, { Component } from 'react'
+import { StyleSheet, View, Text ,TouchableOpacity, ScrollView, TouchableWithoutFeedback, Dimensions} from 'react-native'
+import { AreaChart, Grid, LineChart, YAxis } from 'react-native-svg-charts'
 import Orientation from 'react-native-orientation'
 import * as shape from 'd3-shape'
 import Scale from 'd3-scale'
 
+
+const y_min = 0
+const y_max = 5
  
 class Grafico extends React.PureComponent {
  
@@ -12,7 +15,8 @@ class Grafico extends React.PureComponent {
         Orientation.lockToLandscape()
     }
 state = {
-    data: new Array( 50, 10, 40, 95, 4, 24, 85, 91, 35, 53, 53, 24, 50, 20, 80 ),
+    data: new Array(1, 1.2, 1.3, 2.4, 1.2, 3.8, 2.79, 3.24, 3.5, 1.31, 2.21, 1.21, 3.3, 1.1, 2.2),
+    y_axis: new Array(y_min, y_max),
     ndados: 50
 }
 
@@ -21,14 +25,12 @@ addData = () => {
     let random = 0
     
     if(data.length<this.state.ndados){
-        random = Math.random()*100
-        random = parseInt(random)
+        random = Math.random()*2+1
         data.push(random)
     }
     else{
         data.shift()
-        random = Math.random()*100
-        random = parseInt(random)
+        random = Math.random()*2+1
         data.push(random)
     }   
 
@@ -40,31 +42,47 @@ addData = () => {
  
         return (
             <View style= {styles.mainView}>
+                <YAxis
+                        style = {{height: 400, width: 40}}
+                        data={ this.state.y_axis }
+                        contentInset={ {top: 20, left: 0, right: 50, bottom: 20}  }
+                        svg={{
+                        fill: 'grey',
+                        fontSize: 10,
+                        }}
+                        numberOfTicks={ 10 }
+                        formatLabel={ value => `${value} V` }
+                />
                 <ScrollView style={{height: 400}}>
                     <TouchableWithoutFeedback onPress = {() => this.addData()}>
-            
-                        <View style>    
+                        
+                        <View>    
                             <AreaChart
                                 style={styles.area_style}
+                                title = {{text: "Gráfico"}}
                                 data={ this.state.data }
-                                svg={{fill: 'rgba(30,144,255)', fillOpacity: 0.3, fillRule:'evenodd'  }}
+                                svg={{fill: '#00BFFF', fillOpacity: 0.3, fillRule:'evenodd'}}
                                 contentInset={{ top: 20, left: 0, right: 50, bottom: 20 }}
-                                //curve = {shape.curveMonotoneX}
-                                yMin = {-150}
-                                yMax = {150}
+                                //curve = {shape.curveStepAfter}
+                                curve = {shape.curveCardinal.tension(1)}
+                                yMin = {y_min}
+                                yMax = {y_max}
                             >       
                                 
                                 <Grid></Grid>
                             </AreaChart>  
                             <LineChart 
                                 style={styles.line_style}
+                                title = {{text: "Gráfico"}}
                                 data={ this.state.data }
                                 svg = {{stroke: '#fff'}}
-                                //curve = {shape.curveMonotoneX}
+                                //curve = {shape.curveStepAfter}
+                                curve = {shape.curveCardinal.tension(1)}
                                 contentInset={{ top: 20, left: 0, right: 50, bottom: 20 }}
-                                yMin = {-150}
-                                yMax = {150}>
-                                </LineChart>  
+                                yMin = {y_min}
+                                yMax = {y_max}
+                                >
+                            </LineChart>  
                         </View>
                     </TouchableWithoutFeedback>
     
@@ -81,23 +99,20 @@ addData = () => {
 const styles = StyleSheet.create({
     mainView: {
         flex: 1,
-        backgroundColor: '#313131'
+        backgroundColor: '#313131',
+        flexDirection: 'row'
+        
         },
-    text_style: {
-        flexDirection: 'column'
-    },
     area_style: {
-        height: 800
+        height: 400
     },
     line_style: {
-        height: 800,
-        width: Dimensions.get('window').width,
+        height: 400,
+        width: 813,
         position: 'absolute',
         top: 0,
         left: 0
-    }    
-
-    
+    }
 })
 
 Grafico.navigationOptions = {

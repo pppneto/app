@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     }    
 })
 
-Main.navigationOption = {
+Main.navigationOptions = {
     title: 'Main'
 }
 
