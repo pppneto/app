@@ -3,6 +3,7 @@ import { StyleSheet,Button, View, Text } from 'react-native'
 import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Orientation from 'react-native-orientation'
+import BluetoothSerial from 'react-native-bluetooth-serial'
 
 
 class Main extends Component  {
@@ -26,6 +27,14 @@ class Main extends Component  {
         willFocus.remove()
     }
     
+    conectaBT(){
+        BluetoothSerial.connect("00:18:E4:40:00:06")
+        .then((res) => {
+            this.setState({palavra: 'conectou disgraama'})
+        })
+        .catch((err) => Toast.showShortBottom(err.message))
+    }
+
     clicaDedos(dedo){
         let palavra = this.state.palavra
 
@@ -138,7 +147,7 @@ class Main extends Component  {
 
                 <ActionButton>
 
-                    <ActionButton.Item title = "Conectar à prótese" size = {40} >
+                    <ActionButton.Item title = "Conectar à prótese" size = {40} onPress= {() => this.conectaBT()}>
                         <Icon name = 'bluetooth-b' style = {styles.actionButtonIcon}/>
                     </ActionButton.Item>
 
