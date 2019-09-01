@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet,Button, View, Text, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet,Button, View, Text, Image, TouchableOpacity , Dimensions} from 'react-native'
 import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Orientation from 'react-native-orientation'
@@ -51,7 +51,7 @@ class Main extends Component  {
         let palavra = this.state.palavra
         let visible = this.state.visible
 
-        if(dedo == 1){
+        if(dedo == 'polegar'){
             if(this.state.polegar){
                 palavra = palavra.substr(0,17) + '0' + palavra.substr(18,31)
                 palavra = palavra.substr(0,18) + '0' + palavra.substr(19,31)
@@ -63,7 +63,7 @@ class Main extends Component  {
             }
             this.setState({polegar:!this.state.polegar,texto:"polegar",palavra:palavra})
         }
-        else if(dedo == 2){
+        else if(dedo == 'indicador'){
             if(this.state.indicador){
                 palavra = palavra.substr(0,20) + '0' + palavra.substr(21,31)
                 palavra = palavra.substr(0,21) + '0' + palavra.substr(22,31)
@@ -74,7 +74,7 @@ class Main extends Component  {
             }
             this.setState({indicador:!this.state.indicador,texto:"indicador",palavra:palavra})
         }
-        else if(dedo == 3){
+        else if(dedo == 'medio'){
             if(this.state.medio){
                 palavra = palavra.substr(0,23) + '0' + palavra.substr(24,31)
                 palavra = palavra.substr(0,24) + '0' + palavra.substr(25,31)
@@ -85,7 +85,7 @@ class Main extends Component  {
             }
             this.setState({medio:!this.state.medio,texto:"medio",palavra})
         }
-        else if(dedo == 4){
+        else if(dedo == 'anelar'){
 
             if(this.state.anelar){
                 palavra = palavra.substr(0,26) + '0' + palavra.substr(27,31)
@@ -98,7 +98,7 @@ class Main extends Component  {
             }
             this.setState({anelar:!this.state.anelar,texto:"anelar",palavra})
         }
-        else if(dedo == 5){
+        else if(dedo == 'minimo'){
             this.state.visible == 'flex' ? 'none' : 'flex' 
             if(this.state.minimo){
                 palavra = palavra.substr(0,29) + '0' + '0' 
@@ -119,50 +119,13 @@ class Main extends Component  {
 
         return (
             <View style={styles.mainView}>
-                    <View style={styles.viewBotoes}>
-                        <Button
-                        onPress={() =>
-                            this.clicaDedos(1)
-                        }
-                        title="Polegar"
-                        color={this.state.polegar == true ? "#0000ff" : "#000000"}
-                        />
-                        <Button
-                         onPress={() => 
-                            this.clicaDedos(2)
-                            }
-                        title="Indicador"
-                        color={this.state.indicador == true ? "#0000ff" : "#000000"}
-                        />
-                        <Button 
-                         onPress={() => 
-                            this.clicaDedos(3)
-                            }
-                        title="Médio"
-                        color={this.state.medio == true ? "#0000ff" : "#000000"}
-                        />
-                        <Button
-                         onPress={() => 
-                            this.clicaDedos(4)
-                            }
-                        title="Anelar"
-                        color={this.state.anelar == true ? "#0000ff" : "#000000"}
-                        />
-                        <Button
-                         onPress={() => 
-                            this.clicaDedos(5)
-                            }
-                        title="Mínimo"
-                        color={this.state.minimo == true ? "#0000ff" : "#000000"}
-                        />
-                        
-                    </View>
-                        
+
                     <Text style = {{color: '#fff'}}>
                             {this.state.palavra}
                     </Text>
+
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(5)
+                            this.clicaDedos('minimo')
                             }
                             style = {{
                                 position: 'absolute',
@@ -182,7 +145,7 @@ class Main extends Component  {
                     
 
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(4)
+                            this.clicaDedos('anelar')
                             }
                             style = {{
                                 position: 'absolute',
@@ -199,7 +162,7 @@ class Main extends Component  {
                     </TouchableOpacity>
                     
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(3)
+                            this.clicaDedos('medio')
                             }
                             style = {{
                                 position: 'absolute',
@@ -216,7 +179,7 @@ class Main extends Component  {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(2)
+                            this.clicaDedos('indicador')
                             }
                             style = {{
                                 position: 'absolute',
@@ -233,7 +196,7 @@ class Main extends Component  {
                     </TouchableOpacity>
                     
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(1)
+                            this.clicaDedos('polegar')
                             }
                             style = {{
                                 position: 'absolute',
@@ -256,14 +219,14 @@ class Main extends Component  {
                             position: 'absolute',
                             left: 140,
                             top: 300,
-                            height:200,
+                            height: 200,
                             width: 200
                         }}
                     >
                     </Image>
 
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(5)
+                            this.clicaDedos('minimo')
                             }
                             style = {{
                                 position: 'absolute',
@@ -280,7 +243,7 @@ class Main extends Component  {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(4)
+                            this.clicaDedos('anelar')
                             }
                             style = {{
                                 position: 'absolute',
@@ -297,7 +260,7 @@ class Main extends Component  {
                     </TouchableOpacity>
                         
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(3)
+                            this.clicaDedos('medio')
                             }
                             style = {{
                                 position: 'absolute',
@@ -307,14 +270,13 @@ class Main extends Component  {
                         source = {imagem_dedo3f}
                         style = {{
                             height: 160,
-                            width: 53.9,
                             display: this.state.medio == true ? 'flex' : 'none'}}
                         >
                         </Image>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(2)
+                            this.clicaDedos('indicador')
                             }
                             style = {{
                                 position: 'absolute',
@@ -331,7 +293,7 @@ class Main extends Component  {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => 
-                            this.clicaDedos(1)
+                            this.clicaDedos('polegar')
                             }
                             style = {{
                                 position: 'absolute',
@@ -375,11 +337,6 @@ const styles = StyleSheet.create({
         height: 22,
         color: 'white',
     },
-    viewBotoes:{
-        flexDirection:'row',
-    
-    } 
-      
 })
 
 Main.navigationOptions = {
