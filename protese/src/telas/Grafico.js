@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text ,TouchableOpacity, ScrollView, TouchableWithoutFeedback, Dimensions} from 'react-native'
+import { StyleSheet, View, ScrollView, TouchableWithoutFeedback} from 'react-native'
 import { AreaChart, Grid, LineChart, YAxis } from 'react-native-svg-charts'
 import Orientation from 'react-native-orientation'
 import * as shape from 'd3-shape'
@@ -48,7 +48,9 @@ addData = () => {
                         contentInset={ {top: 20, left: 0, right: 50, bottom: 20}  }
                         svg={{
                         fill: 'grey',
-                        fontSize: 10,
+                        fontSize: 12,
+                        stroke: '#fff',
+                        strokeWidth: 0.2
                         }}
                         numberOfTicks={ 10 }
                         formatLabel={ value => `${value} V` }
@@ -69,13 +71,13 @@ addData = () => {
                                 yMax = {y_max}
                             >       
                                 
-                                <Grid></Grid>
+                                <Grid svg = {{stroke: '#555', strokeOpacity: 0.3}}></Grid>
                             </AreaChart>  
                             <LineChart 
                                 style={styles.line_style}
                                 title = {{text: "Gráfico"}}
                                 data={ this.state.data }
-                                svg = {{stroke: '#fff'}}
+                                svg = {{stroke: '#0098da'}}
                                 //curve = {shape.curveStepAfter}
                                 curve = {shape.curveCardinal.tension(1)}
                                 contentInset={{ top: 20, left: 0, right: 50, bottom: 20 }}
