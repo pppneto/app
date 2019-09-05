@@ -4,7 +4,6 @@ import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Orientation from 'react-native-orientation'
 import BluetoothSerial from 'react-native-bluetooth-serial'
-import imagemrobo from '../images/Imagem1.png'
 import imagem_dedo5 from '../images/minimo.png'
 import imagem_dedo5f from '../images/minimo_fechado.png'
 import imagem_dedo4 from '../images/anelar.png'
@@ -270,6 +269,7 @@ class Main extends Component  {
                         source = {imagem_dedo3f}
                         style = {{
                             height: 160,
+                            width: 53.9,
                             display: this.state.medio == true ? 'flex' : 'none'}}
                         >
                         </Image>
