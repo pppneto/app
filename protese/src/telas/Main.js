@@ -16,6 +16,7 @@ import imagem_dedo1 from '../images/polegar.png'
 import imagem_dedo1f from '../images/polegar_fechado.png'
 import imagem_palma from '../images/palma.png'
 
+console.disableYellowBox = true
 
 class Main extends Component  {
     state={
