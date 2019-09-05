@@ -39,7 +39,7 @@ class Main extends Component  {
                 palavra = palavra.substr(0,18) + '8' + palavra.substr(19,31)
                 
             }
-            this.setState({polegar:!this.state.polegar,texto:"polegar",palavra:palavra})
+            this.setState({polegar:!this.state.polegar,texto:"polegar",palavra})
         }
         else if(dedo == 2){
             if(this.state.indicador){
@@ -50,7 +50,7 @@ class Main extends Component  {
                 palavra = palavra.substr(0,20) + '1' + palavra.substr(21,31)
                 palavra = palavra.substr(0,21) + '8' + palavra.substr(22,31)
             }
-            this.setState({indicador:!this.state.indicador,texto:"indicador",palavra:palavra})
+            this.setState({indicador:!this.state.indicador,texto:"indicador",palavra})
         }
         else if(dedo == 3){
             if(this.state.medio){
@@ -74,7 +74,7 @@ class Main extends Component  {
                 palavra = palavra.substr(0,27) + '8' + palavra.substr(28,31)
 
             }
-            this.setState({medio:!this.state.medio,texto:"medio",palavra})
+            this.setState({anelar:!this.state.anelar,texto:"anelar",palavra})
         }
         else if(dedo == 5){
             if(this.state.minimo){
