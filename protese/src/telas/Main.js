@@ -3,7 +3,7 @@ import { StyleSheet,Button, View, Text, Image, TouchableOpacity , Dimensions} fr
 import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Orientation from 'react-native-orientation'
-import BluetoothSerial from 'react-native-bluetooth-serial'
+import BluetoothSerial from 'react-native-bluetooth-serial-next'
 import imagemrobo from '../images/Imagem1.png'
 import imagem_dedo5 from '../images/minimo.png'
 import imagem_dedo5f from '../images/minimo_fechado.png'
@@ -42,10 +42,21 @@ class Main extends Component  {
     
     conectaBT(){
         BluetoothSerial.connect("00:18:E4:40:00:06")
-        .then((res) => {
-            this.setState({palavra: 'conectou disgraama'})
-        })
-        .catch((err) => Toast.showShortBottom(err.message))
+       
+    }
+
+    le(){
+        BluetoothSerial.read((data, subscription) => {
+            console.log(data);
+           
+            if (this.imBoredNow && subscription) {
+              BluetoothSerial.removeSubscription(subscription);
+            }
+          }, "\r\n");
+    }
+
+    altera(data){
+        this.setState({palavra:data}) 
     }
 
     clicaDedos(dedo){
@@ -311,6 +322,9 @@ class Main extends Component  {
                     </TouchableOpacity>
                 
                 <ActionButton>
+                    <ActionButton.Item title = "Receber dado" size = {40} onPress= {() => this.le()}>
+                        <Icon name = 'bluetooth-b' style = {styles.actionButtonIcon}/>
+                    </ActionButton.Item>
 
                     <ActionButton.Item title = "Conectar à prótese" size = {40} onPress= {() => this.conectaBT()}>
                         <Icon name = 'bluetooth-b' style = {styles.actionButtonIcon}/>
