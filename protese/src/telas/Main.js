@@ -282,6 +282,7 @@ class Main extends Component  {
                         source = {imagem_dedo3f}
                         style = {{
                             height: 160,
+                            width: 53.9,
                             display: this.state.medio == true ? 'flex' : 'none'}}
                         >
                         </Image>
