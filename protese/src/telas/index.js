@@ -1,9 +1,11 @@
 import Main from './Main';
 import Grafico from './Grafico';
-import { createAppContainer, createStackNavigator } from 'react-navigation';
+import BTtela from './BTtela'
+import { createAppContainer, createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 const Routes = createAppContainer(
-  createStackNavigator({
+  createBottomTabNavigator({
+    Bluetooth: BTtela,
     Main: Main,
     Grafico: Grafico,
   })

@@ -13,20 +13,28 @@ const y_max = 5
 class Grafico extends React.PureComponent {
  
     componentDidMount() {
-        Orientation.lockToLandscape()
+        const willFocus = this.props.navigation.addListener('willFocus', payload => this.componentWillFocus(payload))
         this.addData()
     }
+    
     state = {
-        data: new Array(1,5,27,90,1002),
+        data: new Array(1,5,27,90,100),
         y_axis: new Array(y_min, y_max),
         ndados: 50
+    }
+
+    componentWillFocus() {
+        Orientation.lockToLandscape()
+    }
+
+    componentWillUnmount() {
+        willFocus.remove()
     }
 
     addData(){
         let dataArray = this.state.data.slice()
         let aux = ''
         BluetoothSerial.read((data, subscription) => {
-            
             Toast.show(Number(aux))
             if(data != '\n'){
                 aux = aux+data
