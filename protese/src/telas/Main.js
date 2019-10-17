@@ -4,7 +4,6 @@ import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Orientation from 'react-native-orientation'
 import BluetoothSerial from 'react-native-bluetooth-serial-next'
-import imagemrobo from '../images/Imagem1.png'
 import imagem_dedo5 from '../images/minimo.png'
 import imagem_dedo5f from '../images/minimo_fechado.png'
 import imagem_dedo4 from '../images/anelar.png'
@@ -16,6 +15,7 @@ import imagem_dedo2f from '../images/indicador_fechado.png'
 import imagem_dedo1 from '../images/polegar.png'
 import imagem_dedo1f from '../images/polegar_fechado.png'
 import imagem_palma from '../images/palma.png'
+import Toast from 'react-native-simple-toast'
 
 console.disableYellowBox = true
 
@@ -40,19 +40,50 @@ class Main extends Component  {
         willFocus.remove()
     }
     
-    conectaBT(){
-        BluetoothSerial.connect("00:18:E4:40:00:06")
-       
+     conectaBT(){
+
+        requestEnable = () => async () => {
+            try {
+              await BluetoothSerial.requestEnable();
+              this.setState({ isEnabled: true });
+            } catch (e) {
+              Toast.showShortBottom(e.message);
+            }
+          };
+          
+        listDevices = async () => {
+            try {
+              const list = await BluetoothSerial.list();
+        
+              this.setState(({ devices }) => ({
+                devices: devices.map(device => {
+                  const found = list.find(v => v.id === device.id);
+        
+                  if (found) {
+                    return {
+                      ...found,
+                      paired: true,
+                      connected: false
+                    };
+                  }
+        
+                  return device;
+                })
+              }));
+            } catch (e) {
+              Toast.showShortBottom(e.message);
+            }
+          };
     }
 
     le(){
         BluetoothSerial.read((data, subscription) => {
-            console.log(data);
+            Toast.show(data);
            
             if (this.imBoredNow && subscription) {
               BluetoothSerial.removeSubscription(subscription);
             }
-          }, "\r\n");
+          }, "\n4");
     }
 
     altera(data){
@@ -131,7 +162,7 @@ class Main extends Component  {
 
         return (
             <View style={styles.mainView}>
-
+                <View>
                     <Text style = {{color: '#fff'}}>
                             {this.state.palavra}
                     </Text>
@@ -321,6 +352,7 @@ class Main extends Component  {
                         >
                         </Image>
                     </TouchableOpacity>
+                </View>
                 
                 <ActionButton>
                     <ActionButton.Item title = "Receber dado" size = {40} onPress= {() => this.le()}>

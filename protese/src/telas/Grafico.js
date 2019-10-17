@@ -4,7 +4,8 @@ import { AreaChart, Grid, LineChart, YAxis } from 'react-native-svg-charts'
 import Orientation from 'react-native-orientation'
 import * as shape from 'd3-shape'
 import Scale from 'd3-scale'
-
+import BluetoothSerial from 'react-native-bluetooth-serial-next'
+import Toast from 'react-native-simple-toast'
 
 const y_min = 0
 const y_max = 5
@@ -13,29 +14,54 @@ class Grafico extends React.PureComponent {
  
     componentDidMount() {
         Orientation.lockToLandscape()
+        this.addData()
     }
-state = {
-    data: new Array(1, 1.2, 1.3, 2.4, 1.2, 3.8, 2.79, 3.24, 3.5, 1.31, 2.21, 1.21, 3.3, 1.1, 2.2),
-    y_axis: new Array(y_min, y_max),
-    ndados: 50
-}
-
-addData = () => {
-    let data = this.state.data.slice()
-    let random = 0
-    
-    if(data.length<this.state.ndados){
-        random = Math.random()*2+1
-        data.push(random)
+    state = {
+        data: new Array(1,5,27,90,1002),
+        y_axis: new Array(y_min, y_max),
+        ndados: 50
     }
-    else{
-        data.shift()
-        random = Math.random()*2+1
-        data.push(random)
-    }   
 
-    this.setState({data})
-}
+    addData(){
+        let dataArray = this.state.data.slice()
+        let aux = ''
+        BluetoothSerial.read((data, subscription) => {
+            
+            Toast.show(Number(aux))
+            if(data != '\n'){
+                aux = aux+data
+            }
+            else{
+                if(dataArray.length<this.state.ndados){
+                    dataArray.push(Number(aux))
+                    
+                }
+                else{
+                    dataArray.shift()
+                    dataArray.push(Number(aux))
+                    
+                }
+                this.setState({data: dataArray })
+                
+                aux = ''
+            }
+            if (this.imBoredNow && subscription) {
+            BluetoothSerial.removeSubscription(subscription);
+            }
+        }, "\n");
+        
+        // if(data.length<this.state.ndados){
+        //     random = Math.random()*2+1
+        //     data.push(random)
+        // }
+        // else{
+        //     data.shift()
+        //     random = Math.random()*2+1
+        //     data.push(random)
+        // }   
+        
+        
+    }
 
     render() {
   
