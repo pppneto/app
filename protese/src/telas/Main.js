@@ -153,10 +153,21 @@ class Main extends Component {
         )
     }
 
-   
-
     render() {
-        const { isEnabled, device, devices, scanning, processing } = this.state;
+        const propTela = 0.6 //proporção da palma da mão em relação a tela
+        const larguraTela = Dimensions.get('window').width //largura da tela
+        const alturaTela = Dimensions.get('window').height //altura da tela
+
+        const larguraPalma = larguraTela*propTela //largura da palma na tela
+        const propPalma = 1.016 // (altura da palma / largura da palma)
+
+        //[ (largura do dedo / largura da palma) , (altura do dedo / larguera do dedo) ]
+        const propMinimo = [0.4,1.42] 
+        const propAnelar = []
+        const propMedio = []
+        const propIndicador = []
+        const propPolegar = []
+
         return (
             <View style={styles.mainView}>
   
@@ -172,22 +183,22 @@ class Main extends Component {
                   <Text style={{ color: '#fff' }}>
                       {this.state.paired.toString()}
                   </Text>
-  
+                
                   <View>
                       <TouchableOpacity onPress={() =>
                           this.clicaDedos('minimo')
                       }
                           style={{
                               position: 'absolute',
-                              left: 89,
-                              top: 253
+                              left: larguraTela/2 - larguraPalma/2 - larguraPalma*propMinimo[0],
+                              top: alturaTela/2 - (larguraPalma*propPalma/2) - larguraPalma*propMinimo[0]*propMinimo[1] 
                           }}>
                           <Image
                               source={imagem_dedo5}
                               style={{
   
-                                  height: 120,
-                                  width: 83.9,
+                                  height: larguraPalma*propMinimo[0]*propMinimo[1],
+                                  width: larguraPalma*propMinimo[0],
                                   display: this.state.minimo == true ? 'none' : 'flex'
                               }}
                           >
@@ -195,7 +206,7 @@ class Main extends Component {
                       </TouchableOpacity>
   
   
-  
+                        
                       <TouchableOpacity onPress={() =>
                           this.clicaDedos('anelar')
                       }
@@ -207,9 +218,10 @@ class Main extends Component {
                           <Image
                               source={imagem_dedo4}
                               style={{
-                                  height: 149,
-                                  width: 65.4,
-                                  display: this.state.anelar == true ? 'none' : 'flex'
+                                 
+                                height: larguraPalma*propAnelar[0]*propAnelar[1],
+                                width: larguraPalma*propAnelar[0],
+                                display: this.state.anelar == true ? 'none' : 'flex'
                               }}
                           >
                           </Image>
@@ -226,8 +238,9 @@ class Main extends Component {
                           <Image
                               source={imagem_dedo3}
                               style={{
-                                  height: 160,
-                                  width: 53.9,
+                                  
+                                height: larguraPalma*propMedio[0]*propMedio[1],
+                                width: larguraPalma*propMedio[0],
                                   display: this.state.medio == true ? 'none' : 'flex'
                               }}
                           >
@@ -245,8 +258,9 @@ class Main extends Component {
                           <Image
                               source={imagem_dedo2}
                               style={{
-                                  height: 160,
-                                  width: 53.9,
+                                  
+                                height: larguraPalma*propIndicador[0]*propIndicador[1],
+                                width: larguraPalma*propIndicador[0],
                                   display: this.state.indicador == true ? 'none' : 'flex'
                               }}
                           >
@@ -264,8 +278,9 @@ class Main extends Component {
                           <Image
                               source={imagem_dedo1}
                               style={{
-                                  height: 160,
-                                  width: 103.9,
+                                 
+                                height: larguraPalma*propPolegar[0]*propPolegar[1],
+                                width: larguraPalma*propPolegar[0],
                                   display: this.state.polegar == true ? 'none' : 'flex'
                               }}
                           >
@@ -277,10 +292,10 @@ class Main extends Component {
                           source={imagem_palma}
                           style={{
                               position: 'absolute',
-                              left: 140,
-                              top: 300,
-                              height: 200,
-                              width: 200
+                              left: larguraTela/2 - larguraPalma/2,
+                              top: alturaTela/2 - (larguraPalma*propPalma/2),
+                              height: larguraPalma*propPalma,
+                              width: larguraPalma
                           }}
                       >
                       </Image>
