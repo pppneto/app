@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, Alert, SafeAreaView, Switch, ScrollView, Modal, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, Alert, SafeAreaView, Switch, ScrollView,PermissionsAndroid, Modal, ActivityIndicator } from 'react-native'
 import Orientation from 'react-native-orientation'
 import DeviceList from "../components/DeviceList"
 import Button from "../components/Button"
@@ -7,7 +7,7 @@ import Toast from "@remobile/react-native-toast"
 import styles from "../styles"
 import BluetoothSerial, { withSubscription } from 'react-native-bluetooth-serial-next'
 
-class BTtela extends Component{
+class BTtela extends Component {
     state = {
         isEnabled: false,
         device: null,
@@ -20,13 +20,15 @@ class BTtela extends Component{
 
     async componentDidMount() {
         this.events = this.props.events
+
+
         const willFocus = this.props.navigation.addListener('willFocus', payload => this.componentWillFocus(payload))
         try {
             const [isEnabled, devices] = await Promise.all([
                 BluetoothSerial.isEnabled(),
                 BluetoothSerial.list()
             ]);
-    
+
             this.setState({
                 isEnabled,
                 devices: devices.map(device => ({
@@ -39,34 +41,34 @@ class BTtela extends Component{
         catch (e) {
             //Toast.showShortBottom(e.message);
         }
-    
+
         if (!this.state.isEnabled) {
             this.alertaBluetooth()
         }
-    
-    
+
+
         this.events.on("bluetoothEnabled", () => { //Bluetooth ligado
             //Toast.showShortBottom("Bluetooth habilitado");
             this.setState({ isEnabled: true });
         })
-    
+
         this.events.on("bluetoothDisabled", () => { //Bluetooth desligado
             //Toast.showShortBottom("Bluetooth desadabilitado");
             this.setState({ isEnabled: false });
         })
-    
+
         this.events.on("Conectado com sucesso", ({ device }) => { //Bluetooth conectado
             if (device) {
                 //Toast.showShortBottom(`Dispositivo ${device.name}<${device.id}> foi conectado`);
             }
         })
-    
+
         this.events.on("Falha na conexão", ({ device }) => { //Falha na conexão
             if (device) {
                 //Toast.showShortBottom(`Falha ao conectar com o dispositivo ${device.name}<${device.id}>`);
             }
         })
-    
+
         this.events.on("Conexão perdida", ({ device }) => { //Conexão perdida
             if (device) {
                 //Toast.showShortBottom(`Dispositivo ${device.name}<${device.id}> conexão foi perdida`);
@@ -94,8 +96,11 @@ class BTtela extends Component{
     toggleBluetooth = async value => {
         try {
             if (value) {
+
                 await BluetoothSerial.enable()
+                this.listDevices()
                 this.setState({ isEnabled: true })
+
             } else {
                 await BluetoothSerial.disable()
                 this.setState({ isEnabled: true })
@@ -106,6 +111,12 @@ class BTtela extends Component{
     };
 
     listDevices = () => async () => {
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
+            .then(result => {
+                if (!result) {
+                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
+                }
+            });
         try {
             const list = await BluetoothSerial.list();
 
@@ -130,37 +141,50 @@ class BTtela extends Component{
     };
 
     discoverUnpairedDevices = () => async () => {
+        
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
+            .then(result => {
+                if (!result) {
+                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
+                }
+            });
+
         this.setState({ scanning: true });
 
         try {
-            const unpairedDevices = await BluetoothSerial.discoverUnpairedDevices()
+            const unpairedDevices = await BluetoothSerial.listUnpaired();
+    
+          
+            /*let newList = unpairedDevices.map(device => {
+              const found = this.state.devices.filter(d => d.id == device.id ); // filter devices not in list yet
+              if(found) {
+                return {
+                  ...device,
+                  connected: false,
+                  paired: false
+                }
+              }
+              return device;
+            })*/
+
+            newList = unpairedDevices
+          
+            this.setState({
+              scanning: false,
+              devices: [ ...newList ]
+
+            });
+            this.listDevices()
+         }  catch (e) {
+            this.showShortBottomToast(e.message);
+          
             this.setState(({ devices }) => ({
-                scanning: false,
-                devices: devices
-                    .map(device => {
-                        const found = unpairedDevices.find(d => d.id === device.id);
-
-                        if (found) {
-                            return {
-                                ...device,
-                                ...found,
-                                connected: false,
-                                paired: false
-                            };
-                        }
-
-                        return device.paired || device.connected ? device : null;
-                    })
-                    .map(v => v)
+              scanning: false,
+              devices: devices.filter(device => device.paired || device.connected)
             }));
-        } catch (e) {
-            Toast.showShortBottom(e.message);
+          }
 
-            this.setState(({ devices }) => ({
-                scanning: false,
-                devices: devices.filter(device => device.paired || device.connected)
-            }));
-        }
+
     };
 
     cancelDiscovery = () => async () => {
@@ -169,6 +193,7 @@ class BTtela extends Component{
             this.setState({ scanning: false });
         } catch (e) {
             Toast.showShortBottom(e.message);
+
         }
     };
 
@@ -463,9 +488,9 @@ class BTtela extends Component{
         );
     };
 
-    render(){
-        const {isEnabled,device,devices,scanning,processing} = this.state
-        return(
+    render() {
+        const { isEnabled, device, devices, scanning, processing } = this.state
+        return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.topBar}>
                     <Text style={styles.heading}>Bluetooth Example</Text>
