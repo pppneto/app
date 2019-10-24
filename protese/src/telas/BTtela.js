@@ -14,7 +14,6 @@ class BTtela extends Component {
         devices: [],
         scanning: false,
         processing: false,
-        paired: false,
         connected: false
     }
 
@@ -33,7 +32,6 @@ class BTtela extends Component {
                 isEnabled,
                 devices: devices.map(device => ({
                     ...device,
-                    paired: true,
                     connected: false
                 }))
             });
@@ -127,7 +125,6 @@ class BTtela extends Component {
                     if (found) {
                         return {
                             ...found,
-                            paired: true,
                             connected: false
                         };
                     }
@@ -155,19 +152,19 @@ class BTtela extends Component {
             const unpairedDevices = await BluetoothSerial.listUnpaired();
     
           
-            /*let newList = unpairedDevices.map(device => {
-              const found = this.state.devices.filter(d => d.id == device.id ); // filter devices not in list yet
+            let newList = unpairedDevices.map(device => {
+              const found = this.state.devices.filter(d => d.id === device.id ); // filter devices not in list yet
               if(found) {
                 return {
                   ...device,
                   connected: false,
-                  paired: false
                 }
               }
               return device;
-            })*/
-
-            newList = unpairedDevices
+            })
+            
+            
+            //newList = unpairedDevices
           
             this.setState({
               scanning: false,
@@ -180,7 +177,7 @@ class BTtela extends Component {
           
             this.setState(({ devices }) => ({
               scanning: false,
-              devices: devices.filter(device => device.paired || device.connected)
+              devices: devices.filter(device => device.connected)
             }));
           }
 
@@ -197,97 +194,6 @@ class BTtela extends Component {
         }
     };
 
-
-    toggleDevicePairing = async ({ id, paired }) => {
-        if (paired) {
-            await this.unpairDevice(id);
-        } else {
-            await this.pairDevice(id);
-        }
-    };
-
-    pairDevice = async id => {
-        this.setState({ processing: true });
-
-        try {
-            const paired = await BluetoothSerial.pairDevice(id);
-
-            if (paired) {
-                Toast.showShortBottom(
-                    `Device ${paired.name}<${paired.id}> paired successfully`
-                );
-
-                this.setState(({ devices, device }) => ({
-                    processing: false,
-                    device: {
-                        ...device,
-                        ...paired,
-                        paired: true
-                    },
-                    devices: devices.map(v => {
-                        if (v.id === paired.id) {
-                            return {
-                                ...v,
-                                ...paired,
-                                paired: true
-                            };
-                        }
-
-                        return v;
-                    })
-                }));
-            } else {
-                Toast.showShortBottom(`Device <${id}> pairing failed`);
-                this.setState({ processing: false });
-            }
-        } catch (e) {
-            Toast.showShortBottom(e.message);
-            this.setState({ processing: false });
-        }
-    };
-
-    unpairDevice = async id => {
-        this.setState({ processing: true });
-
-        try {
-            const unpaired = await BluetoothSerial.unpairDevice(id);
-
-            if (unpaired) {
-                Toast.showShortBottom(
-                    `Device ${unpaired.name}<${unpaired.id}> unpaired successfully`
-                );
-
-                this.setState(({ devices, device }) => ({
-                    processing: false,
-                    device: {
-                        ...device,
-                        ...unpaired,
-                        connected: false,
-                        paired: false
-                    },
-                    devices: devices.map(v => {
-                        if (v.id === unpaired.id) {
-                            return {
-                                ...v,
-                                ...unpaired,
-                                connected: false,
-                                paired: false
-                            };
-                        }
-
-                        return v;
-                    })
-                }));
-            } else {
-                Toast.showShortBottom(`Device <${id}> unpairing failed`);
-                this.setState({ processing: false });
-            }
-        } catch (e) {
-            Toast.showShortBottom(e.message);
-            this.setState({ processing: false });
-        }
-    };
-
     toggleDeviceConnection = async ({ id, connected }) => {
         if (connected) {
             await this.disconnect(id);
@@ -300,8 +206,8 @@ class BTtela extends Component {
         this.setState({ processing: true });
 
         try {
-            const connected = await BluetoothSerial.device(id).connect();
-
+           connected =  await BluetoothSerial.device(id).connect();
+            
             if (connected) {
                 Toast.showShortBottom(
                     `Connected to device ${connected.name}<${connected.id}>`
@@ -399,7 +305,7 @@ class BTtela extends Component {
     renderModal = (device, processing) => {
         if (!device) return null;
 
-        const { id, name, paired, connected } = device;
+        const { id, name, connected } = device;
 
         return (
             <Modal
@@ -428,16 +334,6 @@ class BTtela extends Component {
 
                         {!processing && (
                             <View style={{ marginTop: 20, width: "50%" }}>
-                                {Platform.OS !== "ios" && (
-                                    <Button
-                                        title={paired ? "Unpair" : "Pair"}
-                                        style={{
-                                            backgroundColor: "#22509d"
-                                        }}
-                                        textStyle={{ color: "#fff" }}
-                                        onPress={() => this.toggleDevicePairing(device)}
-                                    />
-                                )}
                                 <Button
                                     title={connected ? "Disconnect" : "Connect"}
                                     style={{
@@ -446,36 +342,6 @@ class BTtela extends Component {
                                     textStyle={{ color: "#fff" }}
                                     onPress={() => this.toggleDeviceConnection(device)}
                                 />
-                                {connected && (
-                                    <React.Fragment>
-                                        <Button
-                                            title="Write"
-                                            style={{
-                                                backgroundColor: "#22509d"
-                                            }}
-                                            textStyle={{ color: "#fff" }}
-                                            onPress={() =>
-                                                this.write(
-                                                    id,
-                                                    "This is the test message\r\nDoes it work?\r\nTell me it works!\r\n"
-                                                )
-                                            }
-                                        />
-                                        <Button
-                                            title="Write packets"
-                                            style={{
-                                                backgroundColor: "#22509d"
-                                            }}
-                                            textStyle={{ color: "#fff" }}
-                                            onPress={() =>
-                                                this.writePackets(
-                                                    id,
-                                                    "This is the test message\r\nDoes it work?\r\nTell me it works!\r\n"
-                                                )
-                                            }
-                                        />
-                                    </React.Fragment>
-                                )}
                                 <Button
                                     title="Close"
                                     onPress={() => this.setState({ device: null })}

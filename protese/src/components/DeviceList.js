@@ -51,22 +51,13 @@ class DeviceList extends React.Component {
             >
               <View style={{ flexDirection: "column" }}>
                 <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={[
-                      styles.listItemStatus,
-                      {
-                        backgroundColor: device.paired ? "green" : "gray"
-                      }
-                    ]}
-                  >
-                    {device.paired ? "PAIRED" : "UNPAIRED"}
-                  </Text>
+
                   <Text
                     style={[
                       styles.listItemStatus,
                       {
                         backgroundColor: device.connected ? "green" : "gray",
-                        marginLeft: 5
+                        
                       }
                     ]}
                   >
@@ -81,7 +72,6 @@ class DeviceList extends React.Component {
                   <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                     {device.name}
                   </Text>
-                  <Text>{`<${device.id}>`}</Text>
                 </View>
               </View>
             </TouchableHighlight>
