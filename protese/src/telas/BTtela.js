@@ -115,25 +115,18 @@ class BTtela extends Component {
                     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
                 }
             });
+
         try {
-            const list = await BluetoothSerial.list();
+            const list = await BluetoothSerial.list()
+            for(let i=0; i<list.length; i++){
+                if(list[i].id === this.state.device.id){
+                    list[i].connected = true
+                }
+            }
 
-            this.setState(({ devices }) => ({
-                devices: devices.map(device => {
-                    const found = list.find(v => v.id === device.id);
-
-                    if (found) {
-                        return {
-                            ...found,
-                            connected: false
-                        };
-                    }
-
-                    return device;
-                })
-            }));
+            this.setState({devices : list})
         } catch (e) {
-            Toast.showShortBottom(e.message);
+            //Toast.showShortBottom(e.message)
         }
     };
 
@@ -150,28 +143,12 @@ class BTtela extends Component {
 
         try {
             const unpairedDevices = await BluetoothSerial.listUnpaired();
-    
-          
-            let newList = unpairedDevices.map(device => {
-              const found = this.state.devices.filter(d => d.id === device.id ); // filter devices not in list yet
-              if(found) {
-                return {
-                  ...device,
-                  connected: false,
-                }
-              }
-              return device;
-            })
-            
-            
-            //newList = unpairedDevices
-          
+
             this.setState({
               scanning: false,
-              devices: [ ...newList ]
+              devices: [ ...unpairedDevices]
 
             });
-            this.listDevices()
          }  catch (e) {
             this.showShortBottomToast(e.message);
           

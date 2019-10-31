@@ -14,11 +14,11 @@ class Grafico extends React.PureComponent {
  
     componentDidMount() {
         const willFocus = this.props.navigation.addListener('willFocus', payload => this.componentWillFocus(payload))
-        this.addData()
+        this.initRead()
     }
     
     state = {
-        data: new Array(1,5,27,90,100),
+        data: new Array(1,2,3,4,5),
         y_axis: new Array(y_min, y_max),
         ndados: 50
     }
@@ -31,32 +31,31 @@ class Grafico extends React.PureComponent {
         willFocus.remove()
     }
 
-    addData(){
+    initRead(){
+        BluetoothSerial.readEvery(
+            (data, intervalId) => {
+                this.addData(data)
+           
+              if (this.imBoredNow && intervalId) {
+                clearInterval(intervalId);
+              }
+            },
+            50,
+            "\n"
+          );
+    }
+
+    addData(data){
         let dataArray = this.state.data.slice()
-        let aux = ''
-        BluetoothSerial.read((data, subscription) => {
-            Toast.show(Number(aux))
-            if(data != '\n'){
-                aux = aux+data
-            }
-            else{
-                if(dataArray.length<this.state.ndados){
-                    dataArray.push(Number(aux))
-                    
-                }
-                else{
-                    dataArray.shift()
-                    dataArray.push(Number(aux))
-                    
-                }
-                this.setState({data: dataArray })
-                
-                aux = ''
-            }
-            if (this.imBoredNow && subscription) {
-            BluetoothSerial.removeSubscription(subscription);
-            }
-        }, "\n");
+        if(dataArray.length == this.state.ndados){
+            dataArray.shift()
+            dataArray.push(Number(data))
+        }
+        else{
+            dataArray.push(Number(data))
+        }
+        this.setState({data: dataArray})
+        
         
         // if(data.length<this.state.ndados){
         //     random = Math.random()*2+1
@@ -97,7 +96,7 @@ this.setState({
             <View style= {styles.mainView}>
                 <View style = {styles.view_eixo}>
                     <YAxis
-                        style = {{flex: 1}}
+                        style = {{height: Dimensions.get('window').height}}
                         data={ this.state.y_axis }
                         contentInset={ {top: 20, left: 0, right: 50, bottom: 20}  }
                         svg={{
@@ -112,7 +111,6 @@ this.setState({
                 </View>
                 
                 <View style={styles.view_grafico}>
-                    <TouchableWithoutFeedback onPress = {() => this.addData()}> 
                         <View onLayout={(event) => this.measureView(event)}>    
                             <AreaChart
                                 style={{height: Dimensions.get('window').height}}
@@ -149,7 +147,6 @@ this.setState({
                             </LineChart>
                               
                         </View>
-                    </TouchableWithoutFeedback>
     
                 </View>
                 
