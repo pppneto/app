@@ -163,10 +163,10 @@ class Main extends Component {
 
         //[ (largura do dedo / largura da palma) , (altura do dedo / larguera do dedo) ]
         const propMinimo = [0.4,1.42] 
-        const propAnelar = []
-        const propMedio = []
-        const propIndicador = []
-        const propPolegar = []
+        const propAnelar = [0.314,0.674]
+        const propMedio = [1,1]
+        const propIndicador = [1,1]
+        const propPolegar = [1,1]
 
         return (
             <View style={styles.mainView}>
@@ -189,16 +189,19 @@ class Main extends Component {
                           this.clicaDedos('minimo')
                       }
                           style={{
+                              
                               position: 'absolute',
-                              left: larguraTela/2 - larguraPalma/2 - larguraPalma*propMinimo[0],
-                              top: alturaTela/2 - (larguraPalma*propPalma/2) - larguraPalma*propMinimo[0]*propMinimo[1] 
+                              left:89,
+                              top:253 
                           }}>
                           <Image
                               source={imagem_dedo5}
                               style={{
   
-                                  height: larguraPalma*propMinimo[0]*propMinimo[1],
-                                  width: larguraPalma*propMinimo[0],
+                                  //height: larguraPalma*propMinimo[0]*propMinimo[1],
+                                  //width: larguraPalma*propMinimo[0],
+                                  height: 120,
+                                  width: 83.9,
                                   display: this.state.minimo == true ? 'none' : 'flex'
                               }}
                           >
@@ -219,8 +222,10 @@ class Main extends Component {
                               source={imagem_dedo4}
                               style={{
                                  
-                                height: larguraPalma*propAnelar[0]*propAnelar[1],
-                                width: larguraPalma*propAnelar[0],
+                                //height: larguraPalma*propAnelar[0]*propAnelar[1],
+                                //width: larguraPalma*propAnelar[0],
+                                height: 149,
+                                width: 65.4,
                                 display: this.state.anelar == true ? 'none' : 'flex'
                               }}
                           >
@@ -239,8 +244,10 @@ class Main extends Component {
                               source={imagem_dedo3}
                               style={{
                                   
-                                height: larguraPalma*propMedio[0]*propMedio[1],
-                                width: larguraPalma*propMedio[0],
+                                //height: larguraPalma*propMedio[0]*propMedio[1],
+                                //width: larguraPalma*propMedio[0],
+                                height: 160,
+                                width: 53.9,
                                   display: this.state.medio == true ? 'none' : 'flex'
                               }}
                           >
@@ -259,8 +266,10 @@ class Main extends Component {
                               source={imagem_dedo2}
                               style={{
                                   
-                                height: larguraPalma*propIndicador[0]*propIndicador[1],
-                                width: larguraPalma*propIndicador[0],
+                                //height: larguraPalma*propIndicador[0]*propIndicador[1],
+                                //width: larguraPalma*propIndicador[0],
+                                height: 160,
+                                width: 53.9,
                                   display: this.state.indicador == true ? 'none' : 'flex'
                               }}
                           >
@@ -279,8 +288,10 @@ class Main extends Component {
                               source={imagem_dedo1}
                               style={{
                                  
-                                height: larguraPalma*propPolegar[0]*propPolegar[1],
-                                width: larguraPalma*propPolegar[0],
+                                //height: larguraPalma*propPolegar[0]*propPolegar[1],
+                                //width: larguraPalma*propPolegar[0],
+                                height: 160,
+                                width: 103.9,
                                   display: this.state.polegar == true ? 'none' : 'flex'
                               }}
                           >
@@ -292,10 +303,14 @@ class Main extends Component {
                           source={imagem_palma}
                           style={{
                               position: 'absolute',
-                              left: larguraTela/2 - larguraPalma/2,
-                              top: alturaTela/2 - (larguraPalma*propPalma/2),
-                              height: larguraPalma*propPalma,
-                              width: larguraPalma
+                              //left: larguraTela/2 - larguraPalma/2,
+                              //top: alturaTela/2 - (larguraPalma*propPalma/2),
+                              //height: larguraPalma*propPalma,
+                              //width: larguraPalma
+                              left: 140,
+                            top: 300,
+                            height:200,
+                            width: 200
                           }}
                       >
                       </Image>
@@ -311,8 +326,8 @@ class Main extends Component {
                           <Image
                               source={imagem_dedo5f}
                               style={{
-                                  height: 120,
-                                  width: 83.9,
+                                 // height: 120,
+                                 //width: 83.9,
                                   display: this.state.minimo == true ? 'flex' : 'none'
                               }}
                           >
