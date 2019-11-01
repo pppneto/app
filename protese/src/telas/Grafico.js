@@ -5,7 +5,6 @@ import Orientation from 'react-native-orientation'
 import * as shape from 'd3-shape'
 import Scale from 'd3-scale'
 import BluetoothSerial from 'react-native-bluetooth-serial-next'
-import Toast from 'react-native-simple-toast'
 
 const y_min = 0
 const y_max = 5

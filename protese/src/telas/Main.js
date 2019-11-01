@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, Alert, SafeAreaView, Switch, ScrollView, Modal, ActivityIndicator } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Orientation from 'react-native-orientation'
 import imagem_dedo5 from '../images/minimo.png'
 import imagem_dedo5f from '../images/minimo_fechado.png'
@@ -32,7 +32,8 @@ class Main extends Component {
         devices: [],
         scanning: false,
         processing: false,
-        connected: false
+        connected: false,
+        clicado: false
     }
 
     async componentDidMount() {
@@ -49,6 +50,10 @@ class Main extends Component {
 
     altera(data) {
         this.setState({ palavra: data })
+    }
+    
+    clicou(){
+        this.setState({clicado: !this.state.clicado})
     }
 
     clicaDedos(dedo) {
@@ -390,17 +395,22 @@ class Main extends Component {
                                 display: this.state.polegar == true ? 'flex' : 'none'
                             }}
                         >
-                        </Image>
+                        </Image> 
                     </TouchableOpacity>
                 </View>
 
                 <View style={{flex:1}}>
-                    <ActionButton>
-                        <ActionButton.Item title="Conectar à prótese" size={40}>
-                            <Icon name='bluetooth-b' style={styles.actionButtonIcon} />
+                    <ActionButton renderIcon={active => active ? (<Icon name="apple-keyboard-control" style={styles.actionButtonIcon} /> ) : (<Icon name="apple-keyboard-control" style={styles.actionButtonIcon} />)}
+                    degrees = {180}
+                    buttonColor ={'#2EABFF'} 
+                    
+                    >
+                        <ActionButton.Item title="Conectar à prótese" size={40} buttonColor ={this.state.clicado ? '#2EABFF': '#808080'   } onPress={()=>{this.clicou()}}>
+                            <Icon name={ this.state.clicado ? 'bluetooth-connect' : 'bluetooth-off'} style={styles.actionButtonIcon}  />
+                            
                         </ActionButton.Item>
-                        <ActionButton.Item title="Analisar gráfico" size={40}>
-                            <Icon name='area-chart' style={styles.actionButtonIcon} />
+                        <ActionButton.Item title="Analisar gráfico" size={40} buttonColor ={'#808080'}>
+                            <Icon name='chart-areaspline' style={styles.actionButtonIcon} />
                         </ActionButton.Item>
                     </ActionButton>
                 </View>
@@ -413,7 +423,7 @@ class Main extends Component {
 const styles = StyleSheet.create({
     mainView: {
         flex: 1,
-        backgroundColor: '#313131',
+        backgroundColor: '#030B1A',
     },
     actionButtonIcon: {
         fontSize: 20,
