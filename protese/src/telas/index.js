@@ -5,8 +5,7 @@ import { createAppContainer, createStackNavigator, createBottomTabNavigator } fr
 
 const Routes = createAppContainer(
   createStackNavigator({
-    Main: Main,
-    Bluetooth: BTtela,  
+    Main: Main,  
     Grafico: Grafico,
   })
 );

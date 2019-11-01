@@ -518,7 +518,7 @@ class Main extends Component {
                         </View>
 
                 </Modal>
-                <View styles={{ flex: 2 }}>
+                <View styles={{ flex: 1 }}>
                     <TouchableOpacity onPress={() =>
                         this.clicaDedos('minimo')
                     }
@@ -746,17 +746,17 @@ class Main extends Component {
                 </View>
 
                 <View style={{flex:1}}>
-                    <ActionButton renderIcon={active => active ? (<Icon name="apple-keyboard-control" style={styles.actionButtonIcon} /> ) : (<Icon name="apple-keyboard-control" style={styles.actionButtonIcon} />)}
+                    <ActionButton renderIcon={active => active ? (<Icon name="apple-keyboard-control" style={styless.actionButtonIcon} /> ) : (<Icon name="apple-keyboard-control" style={styless.actionButtonIcon} />)}
                     degrees = {180}
                     buttonColor ={'#2EABFF'} 
                     
                     >
                         <ActionButton.Item title="Conectar à prótese" size={40} buttonColor ={this.state.clicado ? '#2EABFF': '#808080'   } onPress={()=>{this.clicou()}}>
-                            <Icon name={ this.state.clicado ? 'bluetooth-connect' : 'bluetooth-off'} style={styles.actionButtonIcon}  />
+                            <Icon name={ this.state.clicado ? 'bluetooth-connect' : 'bluetooth-off'} style={styless.actionButtonIcon}  />
                             
                         </ActionButton.Item>
-                        <ActionButton.Item title="Analisar gráfico" size={40} buttonColor ={'#808080'} onPress = {this.props.navigation.navigate('Grafico')}>
-                            <Icon name='chart-areaspline' style={styles.actionButtonIcon} />
+                        <ActionButton.Item title="Analisar gráfico" size={40} buttonColor ={'#808080'} onPress = {() => this.props.navigation.navigate('Grafico')}>
+                            <Icon name='chart-areaspline' style={styless.actionButtonIcon} />
 
                         </ActionButton.Item>
                     </ActionButton>
