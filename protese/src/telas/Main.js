@@ -115,7 +115,7 @@ class Main extends Component {
     }
     
     clicou(){
-        this.setState({clicado: !this.state.clicado})
+        this.setState({clicado: !this.state.clicado, showBtModal:true})
     }
 
     clicaDedos(dedo) {
