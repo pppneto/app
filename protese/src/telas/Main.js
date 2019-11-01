@@ -17,9 +17,10 @@ import Toast from "@remobile/react-native-toast"
 import BluetoothSerial, { withSubscription } from 'react-native-bluetooth-serial-next'
 import ActionButton from 'react-native-action-button'
 
+
 console.disableYellowBox = true
 
-class Main extends Component {
+class Main extends Component  {
     state = {
         polegar: false,
         indicador: false,
@@ -135,10 +136,13 @@ class Main extends Component {
     }*/
 
     enviaDedos = async () => {
-        if (this.state.connected) {
-            // await BluetoothSerial.write(this.state.palavra)
-        }
-    }
+             await BluetoothSerial.write(this.state.palavra+"\n")
+        
+    }  
+
+    conectaBT(){
+        BluetoothSerial.connect("00:18:E4:40:00:06")
+    } 
 
     render() {
         const propTela = 0.6 //proporção da palma da mão em relação a tela
@@ -157,16 +161,6 @@ class Main extends Component {
 
         return (
             <View style={styles.mainView}>
-                <Text style={{ color: '#fff' }}>
-                    {this.state.palavra}
-                </Text>
-                <Text style={{ color: '#fff' }}>
-                    {this.state.isEnabled.toString()}
-                </Text>
-                <Text style={{ color: '#fff' }}>
-                    {this.state.connected.toString()}
-                </Text>
-
                 <View styles = {{flex:2}}>
                     <TouchableOpacity onPress={() =>
                         this.clicaDedos('minimo')
@@ -396,10 +390,10 @@ class Main extends Component {
 
                 <View style={{flex:1}}>
                     <ActionButton>
-                        <ActionButton.Item title="Conectar à prótese" size={40}>
-                            <Icon name='bluetooth-b' style={styles.actionButtonIcon} />
+                        <ActionButton.Item title="Conectar à prótese" size={40} onPress = {() => this.conectaBT()}>
+                            <Icon name='bluetooth-b' style={styles.actionButtonIcon} /> 
                         </ActionButton.Item>
-                        <ActionButton.Item title="Analisar gráfico" size={40}>
+                        <ActionButton.Item title="Analisar gráfico" size={40} onPress = {() => this.props.navigation.navigate('Grafico')}>
                             <Icon name='area-chart' style={styles.actionButtonIcon} />
                         </ActionButton.Item>
                     </ActionButton>
