@@ -4,9 +4,9 @@ import BTtela from './BTtela'
 import { createAppContainer, createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 const Routes = createAppContainer(
-  createBottomTabNavigator({
-    Bluetooth: BTtela,
+  createStackNavigator({
     Main: Main,
+    Bluetooth: BTtela,  
     Grafico: Grafico,
   })
 );

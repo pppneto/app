@@ -26,10 +26,6 @@ class Grafico extends React.PureComponent {
         Orientation.lockToLandscape()
     }
 
-    componentWillUnmount() {
-        willFocus.remove()
-    }
-
     initRead(){
         BluetoothSerial.readEvery(
             (data, intervalId) => {

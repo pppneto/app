@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, Alert, SafeAreaView, Switch, ScrollView,PermissionsAndroid, Modal, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, Alert, SafeAreaView, Switch, ScrollView, PermissionsAndroid, Modal, ActivityIndicator } from 'react-native'
 import Orientation from 'react-native-orientation'
 import DeviceList from "../components/DeviceList"
 import Button from "../components/Button"
 import Toast from "@remobile/react-native-toast"
 import styles from "../styles"
+import Content from "../stylesBT"
 import BluetoothSerial, { withSubscription } from 'react-native-bluetooth-serial-next'
 
 class BTtela extends Component {
@@ -118,20 +119,20 @@ class BTtela extends Component {
 
         try {
             const list = await BluetoothSerial.list()
-            for(let i=0; i<list.length; i++){
-                if(list[i].id === this.state.device.id){
+            for (let i = 0; i < list.length; i++) {
+                if (list[i].id === this.state.device.id) {
                     list[i].connected = true
                 }
             }
 
-            this.setState({devices : list})
+            this.setState({ devices: list })
         } catch (e) {
             //Toast.showShortBottom(e.message)
         }
     };
 
     discoverUnpairedDevices = () => async () => {
-        
+
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
             .then(result => {
                 if (!result) {
@@ -145,18 +146,18 @@ class BTtela extends Component {
             const unpairedDevices = await BluetoothSerial.listUnpaired();
 
             this.setState({
-              scanning: false,
-              devices: [ ...unpairedDevices]
+                scanning: false,
+                devices: [...unpairedDevices]
 
             });
-         }  catch (e) {
+        } catch (e) {
             this.showShortBottomToast(e.message);
-          
+
             this.setState(({ devices }) => ({
-              scanning: false,
-              devices: devices.filter(device => device.connected)
+                scanning: false,
+                devices: devices.filter(device => device.connected)
             }));
-          }
+        }
 
 
     };
@@ -183,8 +184,8 @@ class BTtela extends Component {
         this.setState({ processing: true });
 
         try {
-           connected =  await BluetoothSerial.device(id).connect();
-            
+            connected = await BluetoothSerial.device(id).connect();
+
             if (connected) {
                 Toast.showShortBottom(
                     `Connected to device ${connected.name}<${connected.id}>`
@@ -279,6 +280,7 @@ class BTtela extends Component {
         }
     };
 
+    
     renderModal = (device, processing) => {
         if (!device) return null;
 
@@ -334,7 +336,9 @@ class BTtela extends Component {
     render() {
         const { isEnabled, device, devices, scanning, processing } = this.state
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+
+            <View style={{ flex: 1 }}>
+
                 <View style={styles.topBar}>
                     <Text style={styles.heading}>Bluetooth Example</Text>
                     <View style={styles.enableInfoWrapper}>
@@ -345,38 +349,39 @@ class BTtela extends Component {
                     </View>
                 </View>
 
-
-                {scanning ? (
-                    isEnabled && (
-                        <View
-                            style={{
-                                flex: 1,
-                                alignItems: "center",
-                                justifyContent: "center"
-                            }}
-                        >
-                            <ActivityIndicator
-                                style={{ marginBottom: 15 }}
-                                size={Platform.OS === "ios" ? 1 : 60}
-                            />
-                            <Button
-                                textStyle={{ color: "#fff" }}
-                                style={styles.buttonRaised}
-                                title="Cancel Discovery"
-                                onPress={this.cancelDiscovery()}
-                            />
-                        </View>
-                    )
-                ) : (
-                        <React.Fragment>
-                            {this.renderModal(device, processing)}
-                            <DeviceList
-                                devices={devices}
-                                onDevicePressed={device => this.setState({ device })}
-                                onRefresh={this.listDevices()}
-                            />
-                        </React.Fragment>
-                    )}
+                {
+                    scanning ? (
+                        isEnabled && (
+                            <View
+                                style={{
+                                    flex: 1,
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}
+                            >
+                                <ActivityIndicator
+                                    style={{ marginBottom: 15 }}
+                                    size={Platform.OS === "ios" ? 1 : 60}
+                                />
+                                <Button
+                                    textStyle={{ color: "#fff" }}
+                                    style={styles.buttonRaised}
+                                    title="Cancel Discovery"
+                                    onPress={this.cancelDiscovery()}
+                                />
+                            </View>
+                        )
+                    ) : (
+                            <React.Fragment>
+                                {this.renderModal(device, processing)}
+                                <DeviceList
+                                    devices={devices}
+                                    onDevicePressed={device => this.setState({ device })}
+                                    onRefresh={this.listDevices()}
+                                />
+                            </React.Fragment>
+                        )
+                }
                 <View style={styles.footer}>
                     <ScrollView horizontal contentContainerStyle={styles.fixedFooter}>
                         {isEnabled && (
@@ -390,7 +395,9 @@ class BTtela extends Component {
                         )}
                     </ScrollView>
                 </View>
-            </SafeAreaView>
+
+            </View>
+
         )
     }
 }
