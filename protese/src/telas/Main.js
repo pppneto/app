@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
-
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-
-import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, TouchableWithoutFeedback ,Alert, SafeAreaView, Switch, ScrollView, Modal, ActivityIndicator, PermissionsAndroid } from 'react-native'
-
-
+import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, TouchableWithoutFeedback, Alert, SafeAreaView, Switch, ScrollView, Modal, ActivityIndicator, PermissionsAndroid } from 'react-native'
 import Orientation from 'react-native-orientation'
 import imagem_dedo5 from '../images/minimo.png'
 import imagem_dedo5f from '../images/minimo_fechado.png'
@@ -41,7 +37,6 @@ class Main extends Component {
         scanning: false,
         processing: false,
         connected: false,
-        clicado: false,
         showBtModal: false
     }
 
@@ -68,10 +63,6 @@ class Main extends Component {
             //Toast.showShortBottom(e.message);
         }
 
-        if (!this.state.isEnabled) {
-            this.alertaBluetooth()
-        }
-
 
         this.events.on("bluetoothEnabled", () => { //Bluetooth ligado
             //Toast.showShortBottom("Bluetooth habilitado");
@@ -86,6 +77,8 @@ class Main extends Component {
         this.events.on("Conectado com sucesso", ({ device }) => { //Bluetooth conectado
             if (device) {
                 //Toast.showShortBottom(`Dispositivo ${device.name}<${device.id}> foi conectado`);
+                this.setState({ connected: true, device: device });
+
             }
         })
 
@@ -98,6 +91,7 @@ class Main extends Component {
         this.events.on("Conexão perdida", ({ device }) => { //Conexão perdida
             if (device) {
                 //Toast.showShortBottom(`Dispositivo ${device.name}<${device.id}> conexão foi perdida`);
+                this.setState({ connected: false, device: null })
             }
         })
     }
@@ -113,9 +107,11 @@ class Main extends Component {
     altera(data) {
         this.setState({ palavra: data })
     }
-    
-    clicou(){
-        this.setState({clicado: !this.state.clicado, showBtModal:true})
+
+    clicaBt = async () => {
+        this.toggleBluetooth()
+        this.setState({ isEnabled: true, showBtModal: true })
+
     }
 
     clicaDedos(dedo) {
@@ -190,47 +186,16 @@ class Main extends Component {
 
     }
 
-    /*alertaBluetooth() {
-        Alert.alert(
-            'Aviso',
-            'É necessário ligar o bluetooth para prosseguir. Deseja ligar o bluetooth?',
-            [
-                { text: 'NÃO' },
-                { text: 'SIM', onPress: () => this.ligaBluetooth() },
-            ]
-        )
-    }*/
-
     enviaDedos = async () => {
         await BluetoothSerial.write(this.state.palavra + "\n")
 
     }
 
-    conectaBT() {
-        BluetoothSerial.connect("00:18:E4:40:00:06")
-    }
-
-    requestEnable = () => async () => {
+    toggleBluetooth = async () => {
         try {
-            await BluetoothSerial.requestEnable();
-            this.setState({ isEnabled: true });
-        } catch (e) {
-            Toast.showShortBottom(e.message);
-        }
-    };
 
-    toggleBluetooth = async value => {
-        try {
-            if (value) {
+            await BluetoothSerial.enable()
 
-                await BluetoothSerial.enable()
-                this.listDevices()
-                this.setState({ isEnabled: true })
-
-            } else {
-                await BluetoothSerial.disable()
-                this.setState({ isEnabled: true })
-            }
         } catch (e) {
             Toast.showShortBottom(e.message)
         }
@@ -448,74 +413,46 @@ class Main extends Component {
             <View style={styless.mainView}>
 
                 <Modal
-                    animationType="fade"
+                    animationType="slide"
                     visible={this.state.showBtModal}
-                    transparent = {true}
-                        >
-                        <TouchableWithoutFeedback onPress={() => this.setState({ showBtModal: false })}>
-                            <View style={{flex: 1,backgroundColor: 'rgba(0,0,0,0.7)'}}></View>
-                        </TouchableWithoutFeedback>
+                    transparent={true}
+                    style={{ borderRadius: 1 }}
+                // onShow={this.discoverUnpairedDevices()}
+                >
+                    <TouchableWithoutFeedback onPress={() => this.setState({ showBtModal: false })}>
+                        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}></View>
+                    </TouchableWithoutFeedback>
 
-                        <View style={{ flex: 1 }}>  
+                    <View style={{ flex: 1 }}>
 
-                            <View style={styles.topBar}>
-                                <Text style={styles.heading}>Bluetooth Example</Text>
-                                <View style={styles.enableInfoWrapper}>
-                                    <Text style={{ fontSize: 14, color: "#fff", paddingRight: 10 }}>
-                                        {isEnabled ? "ON" : "OFF"}
-                                    </Text>
-                                    <Switch onValueChange={this.toggleBluetooth} value={isEnabled} />
-                                </View>
-                            </View>
+                        <View style={styles.topBar}>
+                            <Text style={styles.heading}>Bluetooth Example</Text>
+                            <View style={styles.enableInfoWrapper}>
+                                {
+                                    scanning ? (
+                                        isEnabled && (
 
-                            {
-                                scanning ? (
-                                    isEnabled && (
-                                        <View
-                                            style={{
-                                                flex: 1,
-                                                alignItems: "center",
-                                                justifyContent: "center"
-                                            }}
-                                        >
                                             <ActivityIndicator
-                                                style={{ marginBottom: 15 }}
-                                                size={Platform.OS === "ios" ? 1 : 60}
+                                                size={Platform.OS === "ios" ? 1 : 40}
                                             />
-                                            <Button
-                                                textStyle={{ color: "#fff" }}
-                                                style={styles.buttonRaised}
-                                                title="Cancel Discovery"
-                                                onPress={this.cancelDiscovery()}
-                                            />
-                                        </View>
-                                    )
-                                ) : (
-                                        <React.Fragment>
-                                            {this.renderModal(device, processing)}
-                                            <DeviceList
-                                                devices={devices}
-                                                onDevicePressed={device => this.setState({ device })}
-                                                onRefresh={this.listDevices()}
-                                            />
-                                        </React.Fragment>
-                                    )
-                            }
-                            <View style={styles.footer}>
-                                <ScrollView horizontal contentContainerStyle={styles.fixedFooter}>
-                                    {isEnabled && (
-                                        <Button
-                                            title="Discover more"
-                                            onPress={this.discoverUnpairedDevices()}
-                                        />
-                                    )}
-                                    {!isEnabled && (
-                                        <Button title="Request enable" onPress={this.requestEnable} />
-                                    )}
-                                </ScrollView>
+                                        )
+                                    ) : (isEnabled && (
+                                        <TouchableOpacity onPress={this.discoverUnpairedDevices()}>
+                                            <Icon name="autorenew"></Icon>
+                                        </TouchableOpacity>
+                                    ))}
                             </View>
-
                         </View>
+
+                        <React.Fragment>
+                            {this.renderModal(device, processing)}
+                            <DeviceList
+                                devices={devices}
+                                onDevicePressed={device => this.setState({ device })}
+                                onRefresh={this.listDevices()}
+                            />
+                        </React.Fragment>
+                    </View>
 
                 </Modal>
                 <View styles={{ flex: 1 }}>
@@ -741,28 +678,28 @@ class Main extends Component {
                                 display: this.state.polegar == true ? 'flex' : 'none'
                             }}
                         >
-                        </Image> 
+                        </Image>
                     </TouchableOpacity>
                 </View>
 
-                <View style={{flex:1}}>
-                    <ActionButton renderIcon={active => active ? (<Icon name="apple-keyboard-control" style={styless.actionButtonIcon} /> ) : (<Icon name="apple-keyboard-control" style={styless.actionButtonIcon} />)}
-                    degrees = {180}
-                    buttonColor ={'#2EABFF'} 
-                    
+                <View style={{ flex: 1 }}>
+                    <ActionButton renderIcon={active => active ? (<Icon name="apple-keyboard-control" style={styless.actionButtonIcon} />) : (<Icon name="apple-keyboard-control" style={styless.actionButtonIcon} />)}
+                        degrees={180}
+                        buttonColor={'#2EABFF'}
+
                     >
-                        <ActionButton.Item title="Conectar à prótese" size={40} buttonColor ={this.state.clicado ? '#2EABFF': '#808080'   } onPress={()=>{this.clicou()}}>
-                            <Icon name={ this.state.clicado ? 'bluetooth-connect' : 'bluetooth-off'} style={styless.actionButtonIcon}  />
-                            
+                        <ActionButton.Item title="Conectar à prótese" size={40} buttonColor={this.state.isEnabled ? '#2EABFF' : '#808080'} onPress={() => { this.clicaBt() }}>
+                            <Icon name={this.state.isEnabled ? 'bluetooth-connect' : 'bluetooth-off'} style={styless.actionButtonIcon} />
+
                         </ActionButton.Item>
-                        <ActionButton.Item title="Analisar gráfico" size={40} buttonColor ={'#808080'} onPress = {() => this.props.navigation.navigate('Grafico')}>
+                        <ActionButton.Item title="Analisar gráfico" size={40} buttonColor={'#808080'} onPress={() => this.props.navigation.navigate('Grafico')}>
                             <Icon name='chart-areaspline' style={styless.actionButtonIcon} />
 
                         </ActionButton.Item>
                     </ActionButton>
                 </View>
 
-            </View>
+            </View >
         )
     }
 }
@@ -783,4 +720,4 @@ Main.navigationOptions = {
     title: 'Main'
 }
 
-export default Main
+export default withSubscription({ subscriptionName: "events" })(Main);
