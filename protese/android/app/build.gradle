@@ -188,11 +188,9 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-orientation')
-    implementation project(':react-native-svg')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";
       debugImplementation files(hermesPath + "hermes-debug.aar")

@@ -2,24 +2,12 @@ import React, { Component } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, TouchableWithoutFeedback, Alert, SafeAreaView, Switch, ScrollView, Modal, ActivityIndicator, PermissionsAndroid } from 'react-native'
 import Orientation from 'react-native-orientation'
-import imagem_dedo5 from '../images/minimo.png'
-import imagem_dedo5f from '../images/minimo_fechado.png'
-import imagem_dedo4 from '../images/anelar.png'
-import imagem_dedo4f from '../images/anelar_fechado.png'
-import imagem_dedo3 from '../images/medio.png'
-import imagem_dedo3f from '../images/medio_fechado.png'
-import imagem_dedo2 from '../images/indicador.png'
-import imagem_dedo2f from '../images/indicador_fechado.png'
-import imagem_dedo1 from '../images/polegar.png'
-import imagem_dedo1f from '../images/polegar_fechado.png'
-import imagem_palma from '../images/palma.png'
 import Toast from "@remobile/react-native-toast"
 import BluetoothSerial, { withSubscription } from 'react-native-bluetooth-serial-next'
 import ActionButton from 'react-native-action-button'
 import DeviceList from "../components/DeviceList"
 import Button from "../components/Button"
 import styles from "../styles"
-
 
 console.disableYellowBox = true
 
@@ -179,6 +167,7 @@ class Main extends Component {
                 palavra = palavra.substr(0, 29) + '1' + '0'
                 palavra = palavra.substr(0, 30) + '8' + '0'
             }
+            Toast.show(Dimensions.get("window").width.toString())
             this.setState({ minimo: !this.state.minimo, texto: "minimo", palavra })
             this.enviaDedos()
         }
@@ -346,6 +335,10 @@ class Main extends Component {
 
         const { id, name, connected } = device;
 
+        if (!processing) {
+            this.toggleDeviceConnection(device)
+        }
+        this.setState({ device: null })
         return (
             <Modal
                 animationType="fade"
@@ -393,21 +386,73 @@ class Main extends Component {
         );
     }
 
+    montaMao() {
+
+        return (
+            <View>
+
+                <Image
+                    source={require("../images/palma.png")}
+                    style={styless.imagem_palma}
+                    resizeMode='contain'
+                />
+
+
+
+
+
+                <Image
+                    style={[styless.imagem_anelar, styless.touchable_anelar]}
+                    source={this.state.anelar == true ? null : require('../images/anelar_abre.gif')} fadeDuration={0}
+                    resizeMode='contain'
+
+                ></Image>
+
+
+
+
+
+
+                <Image
+                    style={[styless.imagem_minimo, styless.touchable_minimo]}
+                    source={this.state.minimo == true ? require('../images/minimo_fecha.gif') : null} fadeDuration={0}
+                    resizeMode='contain'
+
+                ></Image>
+
+
+
+
+                <TouchableOpacity onPress={() => this.clicaDedos('anelar')}
+                    style={styless.touchable_anelar}
+                >
+                    <Image
+                        style={styless.imagem_anelar}
+                        source={this.state.anelar == true ? require('../images/anelar_fecha.gif') : null} fadeDuration={0}
+                        resizeMode='contain'
+
+                    ></Image>
+
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => this.clicaDedos('minimo')}
+                    style={styless.touchable_minimo}
+                >
+
+
+                    <Image
+                        style={styless.imagem_minimo}
+                        source={this.state.minimo ? null : require('../images/minimo_abre.gif')} fadeDuration={0}
+                        resizeMode='contain'
+                    ></Image>
+                </TouchableOpacity>
+
+
+            </View>
+        )
+    }
 
     render() {
-        const propTela = 0.6 //proporção da palma da mão em relação a tela
-        const larguraTela = Dimensions.get('window').width //largura da tela
-        const alturaTela = Dimensions.get('window').height //altura da tela
-
-        const larguraPalma = larguraTela * propTela //largura da palma na tela
-        const propPalma = 1.016 // (altura da palma / largura da palma)
-
-        //[ (largura do dedo / largura da palma) , (altura do dedo / larguera do dedo) ]
-        const propMinimo = [0.4, 1.42]
-        const propAnelar = [0.314, 0.674]
-        const propMedio = [1, 1]
-        const propIndicador = [1, 1]
-        const propPolegar = [1, 1]
         const { isEnabled, device, devices, scanning, processing } = this.state
         return (
             <View style={styless.mainView}>
@@ -417,7 +462,7 @@ class Main extends Component {
                     visible={this.state.showBtModal}
                     transparent={true}
                     style={{ borderRadius: 1 }}
-                // onShow={this.discoverUnpairedDevices()}
+                    onShow={this.discoverUnpairedDevices()}
                 >
                     <TouchableWithoutFeedback onPress={() => this.setState({ showBtModal: false })}>
                         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}></View>
@@ -450,237 +495,17 @@ class Main extends Component {
                                 devices={devices}
                                 onDevicePressed={device => this.setState({ device })}
                                 onRefresh={this.listDevices()}
+                                processing={processing}
                             />
                         </React.Fragment>
                     </View>
 
                 </Modal>
-                <View styles={{ flex: 1 }}>
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('minimo')
-                    }
-                        style={{
 
-                            position: 'absolute',
-                            left: 89,
-                            top: 253
-                        }}>
-                        <Image
-                            source={imagem_dedo5}
-                            style={{
+                {
+                    this.montaMao()
+                }
 
-                                //height: larguraPalma*propMinimo[0]*propMinimo[1],
-                                //width: larguraPalma*propMinimo[0],
-                                height: 120,
-                                width: 83.9,
-                                display: this.state.minimo == true ? 'none' : 'flex'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('anelar')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 153,
-                            top: 178
-                        }}>
-                        <Image
-                            source={imagem_dedo4}
-                            style={{
-
-                                //height: larguraPalma*propAnelar[0]*propAnelar[1],
-                                //width: larguraPalma*propAnelar[0],
-                                height: 149,
-                                width: 65.4,
-                                display: this.state.anelar == true ? 'none' : 'flex'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('medio')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 218,
-                            top: 145
-                        }}>
-                        <Image
-                            source={imagem_dedo3}
-                            style={{
-
-                                //height: larguraPalma*propMedio[0]*propMedio[1],
-                                //width: larguraPalma*propMedio[0],
-                                height: 160,
-                                width: 53.9,
-                                display: this.state.medio == true ? 'none' : 'flex'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('indicador')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 268,
-                            top: 148
-                        }}>
-                        <Image
-                            source={imagem_dedo2}
-                            style={{
-
-                                //height: larguraPalma*propIndicador[0]*propIndicador[1],
-                                //width: larguraPalma*propIndicador[0],
-                                height: 160,
-                                width: 53.9,
-                                display: this.state.indicador == true ? 'none' : 'flex'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('polegar')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 334,
-                            top: 323
-                        }}>
-                        <Image
-                            source={imagem_dedo1}
-                            style={{
-
-                                //height: larguraPalma*propPolegar[0]*propPolegar[1],
-                                //width: larguraPalma*propPolegar[0],
-                                height: 160,
-                                width: 103.9,
-                                display: this.state.polegar == true ? 'none' : 'flex'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-
-                    <Image
-                        source={imagem_palma}
-                        style={{
-                            position: 'absolute',
-                            //left: larguraTela/2 - larguraPalma/2,
-                            //top: alturaTela/2 - (larguraPalma*propPalma/2),
-                            //height: larguraPalma*propPalma,
-                            //width: larguraPalma
-                            left: 140,
-                            top: 300,
-                            height: 200,
-                            width: 200
-                        }}
-                    >
-                    </Image>
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('minimo')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 138,
-                            top: 336
-                        }}>
-                        <Image
-                            source={imagem_dedo5f}
-                            style={{
-                                // height: 120,
-                                //width: 83.9,
-                                display: this.state.minimo == true ? 'flex' : 'none'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('anelar')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 185,
-                            top: 304
-                        }}>
-                        <Image
-                            source={imagem_dedo4f}
-                            style={{
-                                height: 149,
-                                width: 65.4,
-                                display: this.state.anelar == true ? 'flex' : 'none'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('medio')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 226,
-                            top: 301
-                        }}>
-                        <Image
-                            source={imagem_dedo3f}
-                            style={{
-                                height: 160,
-                                width: 53.9,
-                                display: this.state.medio == true ? 'flex' : 'none'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('indicador')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 264,
-                            top: 301
-                        }}>
-                        <Image
-                            source={imagem_dedo2f}
-                            style={{
-                                height: 160,
-                                width: 53.9,
-                                display: this.state.indicador == true ? 'flex' : 'none'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() =>
-                        this.clicaDedos('polegar')
-                    }
-                        style={{
-                            position: 'absolute',
-                            left: 258,
-                            top: 340
-                        }}>
-                        <Image
-                            source={imagem_dedo1f}
-                            style={{
-                                height: 160,
-                                width: 103.9,
-                                display: this.state.polegar == true ? 'flex' : 'none'
-                            }}
-                        >
-                        </Image>
-                    </TouchableOpacity>
-                </View>
 
                 <View style={{ flex: 1 }}>
                     <ActionButton renderIcon={active => active ? (<Icon name="apple-keyboard-control" style={styless.actionButtonIcon} />) : (<Icon name="apple-keyboard-control" style={styless.actionButtonIcon} />)}
@@ -704,6 +529,22 @@ class Main extends Component {
     }
 }
 
+//larguta da tela do Pedro = 423.5294
+const largura_tela = Dimensions.get("window").width
+const largura_palma = largura_tela * 0.6
+const largura_minimo = 119
+const largura_anelar = 0.417 * largura_palma
+const largura_medio = 118
+const largura_indicador = 118
+const largura_polegar = 118
+
+const proporcao_minimo = 708 / 401
+const proporcao_anelar = 664 / 282
+const proporcao_medio = 2
+const proporcao_indicador = 2
+const proporcao_polegar = 2
+const proporcao_palma = 522 / 466
+
 const styless = StyleSheet.create({
     mainView: {
         flex: 1,
@@ -714,6 +555,39 @@ const styless = StyleSheet.create({
         height: 22,
         color: 'white',
     },
+    imagem_minimo: {
+        width: largura_minimo,
+        height: (largura_minimo) * proporcao_minimo,
+        borderWidth: 5,
+        borderColor: '#fff'
+    },
+    touchable_minimo: {
+        position: "absolute",
+        left: 28,
+        top: 59,
+    },
+    imagem_anelar: {
+        width: largura_anelar,
+        height: (largura_anelar) * proporcao_anelar,
+        borderWidth: 0,
+        borderColor: '#fff'
+    },
+    touchable_anelar: {
+        position: "absolute",
+        left: 95,
+        top: 16,
+    },
+    imagem_palma: {
+        width: largura_palma,
+        height: largura_palma * proporcao_palma,
+        position: "absolute",
+        left: "15%",
+        top: 160,
+        borderColor: '#fff',
+        borderWidth: 5
+
+    }
+
 })
 
 Main.navigationOptions = {
