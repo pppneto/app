@@ -7,6 +7,7 @@ const Routes = createAppContainer(
   createStackNavigator({
     Main: Main,  
     Grafico: Grafico,
+
   })
 );
 

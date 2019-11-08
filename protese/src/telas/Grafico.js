@@ -91,7 +91,7 @@ this.setState({
             <View style= {styles.mainView}>
                 <View style = {styles.view_eixo}>
                     <YAxis
-                        style = {{height: Dimensions.get('window').height}}
+                        style = {{height: Dimensions.get('window').height-75}}
                         data={ this.state.y_axis }
                         contentInset={ {top: 20, left: 0, right: 50, bottom: 20}  }
                         svg={{
@@ -108,7 +108,7 @@ this.setState({
                 <View style={styles.view_grafico}>
                         <View onLayout={(event) => this.measureView(event)}>    
                             <AreaChart
-                                style={{height: Dimensions.get('window').height}}
+                                style={{height: Dimensions.get('window').height-75}}
                                 title = {{text: "Gráfico"}}
                                 data={ this.state.data }
                                 svg={{fill: '#00BFFF', fillOpacity: 0.3, fillRule:'evenodd'}}
@@ -123,7 +123,7 @@ this.setState({
                             </AreaChart> 
                             <LineChart 
                                 style={{
-                                    height: Dimensions.get('window').height,
+                                    height: Dimensions.get('window').height-75,
                                     position: 'absolute',
                                     top: 0,
                                     left: 0,
@@ -170,7 +170,8 @@ const styles = StyleSheet.create({
 })
 
 Grafico.navigationOptions = {
-    title: 'Gráfico'
+    title: 'Gráfico',
+
 }
 
 export default Grafico

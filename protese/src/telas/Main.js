@@ -32,6 +32,7 @@ class Main extends Component {
         this.events = this.props.events
 
 
+
         const willFocus = this.props.navigation.addListener('willFocus', payload => this.componentWillFocus(payload))
         try {
             const [isEnabled, devices] = await Promise.all([
@@ -167,7 +168,6 @@ class Main extends Component {
                 palavra = palavra.substr(0, 29) + '1' + '0'
                 palavra = palavra.substr(0, 30) + '8' + '0'
             }
-            Toast.show(Dimensions.get("window").width.toString())
             this.setState({ minimo: !this.state.minimo, texto: "minimo", palavra })
             this.enviaDedos()
         }
@@ -395,58 +395,86 @@ class Main extends Component {
                     source={require("../images/palma.png")}
                     style={styless.imagem_palma}
                     resizeMode='contain'
+                    fadeDuration={0}
                 />
 
-
-
-
-
                 <Image
-                    style={[styless.imagem_anelar, styless.touchable_anelar]}
+                    style={styless.imagem_anelar}
                     source={this.state.anelar == true ? null : require('../images/anelar_abre.gif')} fadeDuration={0}
                     resizeMode='contain'
 
                 ></Image>
 
-
-
-
-
-
                 <Image
-                    style={[styless.imagem_minimo, styless.touchable_minimo]}
+                    style={styless.imagem_minimo}
                     source={this.state.minimo == true ? require('../images/minimo_fecha.gif') : null} fadeDuration={0}
                     resizeMode='contain'
 
                 ></Image>
 
+                <Image
+                    style={styless.imagem_anelar}
+                    source={this.state.anelar == true ? require('../images/anelar_fecha.gif') : null} fadeDuration={0}
+                    resizeMode='contain'
 
+                ></Image>
 
+                <Image
+                    style={styless.imagem_minimo}
+                    source={this.state.minimo ? null : require('../images/minimo_abre.gif')} fadeDuration={0}
+                    resizeMode='contain'
+                ></Image>
 
-                <TouchableOpacity onPress={() => this.clicaDedos('anelar')}
-                    style={styless.touchable_anelar}
-                >
+                <Image
+                    style={styless.imagem_medio}
+                    source={this.state.medio ? null : require('../images/medio_abre.gif')} fadeDuration={0}
+                    resizeMode='contain'
+                ></Image>
+
+                <Image
+                    style={styless.imagem_medio}
+                    source={this.state.medio == true ? require('../images/medio_fecha.gif') : null} fadeDuration={0}
+                    resizeMode='contain'
+
+                ></Image>
+
+                <Image
+                    style={styless.imagem_polegar}
+                    source={this.state.polegar == true ? require('../images/polegar_fecha.gif') : null} fadeDuration={0}
+                    resizeMode='contain'
+
+                ></Image>
+
+                <Image
+                    style={styless.imagem_polegar}
+                    source={this.state.polegar ? null : require('../images/polegar_abre.gif')} fadeDuration={0}
+                    resizeMode='contain'
+                ></Image>
+
+                <Image
+                    style={[styless.imagem_indicador, styless.touchable_indicador]}
+                    source={this.state.indicador == true ? require('../images/indicador_fecha.gif') : null} fadeDuration={0}
+                    resizeMode='contain'
+
+                ></Image>
+
+                <TouchableOpacity style={styless.touchable_indicador} onPress={() => this.clicaDedos("indicador")}>
                     <Image
-                        style={styless.imagem_anelar}
-                        source={this.state.anelar == true ? require('../images/anelar_fecha.gif') : null} fadeDuration={0}
+                        style={styless.imagem_indicador}
+                        source={this.state.indicador ? null : require('../images/indicador_abre.gif')} fadeDuration={0}
                         resizeMode='contain'
-
                     ></Image>
-
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => this.clicaDedos('minimo')}
-                    style={styless.touchable_minimo}
-                >
 
 
-                    <Image
-                        style={styless.imagem_minimo}
-                        source={this.state.minimo ? null : require('../images/minimo_abre.gif')} fadeDuration={0}
-                        resizeMode='contain'
-                    ></Image>
-                </TouchableOpacity>
+                <TouchableOpacity style={styless.touchable_minimo} onPress={() => this.clicaDedos("minimo")}></TouchableOpacity>
 
+                <TouchableOpacity style={styless.touchable_anelar} onPress={() => this.clicaDedos("anelar")}></TouchableOpacity>
+
+                <TouchableOpacity style={styless.touchable_medio} onPress={() => this.clicaDedos("medio")}></TouchableOpacity>
+
+                <TouchableOpacity style={styless.touchable_polegar} onPress={() => this.clicaDedos("polegar")}></TouchableOpacity>
 
             </View>
         )
@@ -529,21 +557,47 @@ class Main extends Component {
     }
 }
 
-//larguta da tela do Pedro = 423.5294
+//largura da tela do Pedro = 423.5294
+//altura da tela do Pedro = 752.9412
 const largura_tela = Dimensions.get("window").width
+const altura_tela = Dimensions.get("window").height
 const largura_palma = largura_tela * 0.6
-const largura_minimo = 119
-const largura_anelar = 0.417 * largura_palma
-const largura_medio = 118
-const largura_indicador = 118
-const largura_polegar = 118
+const largura_minimo = 0.468 * largura_palma
+const largura_anelar = 0.393 * largura_palma
+const largura_medio = 0.3738 * largura_palma
+const largura_indicador = 0.2 * largura_palma
+const largura_polegar = 0.743 * largura_palma
 
 const proporcao_minimo = 708 / 401
-const proporcao_anelar = 664 / 282
-const proporcao_medio = 2
-const proporcao_indicador = 2
-const proporcao_polegar = 2
+const proporcao_anelar = 611 / 236
+const proporcao_medio = 636 / 223
+const proporcao_indicador = 739 / 143
+const proporcao_polegar = 600 / 400
 const proporcao_palma = 522 / 466
+
+//conta top
+//top_dedo = top_palma - (((top_palma(0) - top_dedo(0)) / largura_palma(0) )*largura_palma)
+const top_palma = 0.35*Dimensions.get("window").height
+const top_minimo = top_palma - 0.3974 *largura_palma
+const top_anelar = top_palma - 0.6138 *largura_palma
+const top_medio = top_palma - 0.6689 *largura_palma
+const top_indicador = top_palma - 0.6847 *largura_palma
+const top_polegar = top_palma - 0.03148 *largura_palma
+
+//63.52941 left
+//254.11764 largura
+//conta left
+//left_dedo = left_palma - (((left_palma(0) - lef_dedo(0)) / largura_palma(0))*largura_palma)
+const left_palma = largura_tela * 0.15
+const left_minimo = left_palma - 0.1398* largura_palma
+const left_t_minimo =  left_palma + 0.005787 * largura_palma
+const left_anelar =  left_palma + 0.0963 * largura_palma
+const left_t_anelar =  left_palma + 0.2222 * largura_palma
+const left_medio =  left_palma + 0.3363* largura_palma
+const left_t_medio =  left_palma + 0.4386 * largura_palma
+const left_indicador =  left_palma + 0.6944 * largura_palma
+const left_polegar =  left_palma + 0.6747 * largura_palma
+const left_t_polegar =  left_palma + 0.8321 * largura_palma
 
 const styless = StyleSheet.create({
     mainView: {
@@ -556,17 +610,28 @@ const styless = StyleSheet.create({
         color: 'white',
     },
     imagem_minimo: {
+        position: "absolute",
+        left: left_minimo,
+        top: top_minimo,
         width: largura_minimo,
         height: (largura_minimo) * proporcao_minimo,
-        borderWidth: 5,
         borderColor: '#fff'
     },
     touchable_minimo: {
         position: "absolute",
-        left: 28,
-        top: 59,
+        left: left_t_minimo,
+        top: top_minimo,
+        borderRadius: 200,
+        height: (largura_minimo) * proporcao_minimo,
+        width: (largura_minimo) / 3,
+        borderWidth: 0,
+        rotation: -20,
+        borderColor: "#fff"
     },
     imagem_anelar: {
+        position: "absolute",
+        left: left_anelar,
+        top: top_anelar,
         width: largura_anelar,
         height: (largura_anelar) * proporcao_anelar,
         borderWidth: 0,
@@ -574,24 +639,83 @@ const styless = StyleSheet.create({
     },
     touchable_anelar: {
         position: "absolute",
-        left: 95,
-        top: 16,
+        left: left_t_anelar,
+        top: top_anelar,
+        borderRadius: 200,
+        height: (largura_anelar) * proporcao_anelar,
+        width: (largura_anelar) / 2.5,
+        borderWidth: 0,
+        rotation: -13,
+        borderColor: "#fff"
+    },
+    imagem_medio: {
+        position: "absolute",
+        left: left_medio,
+        top: top_medio,
+        width: largura_medio,
+        height: (largura_medio) * proporcao_medio,
+        borderWidth: 0,
+        borderColor: '#fff'
+    },
+    touchable_medio: {
+        position: "absolute",
+        left: left_t_medio,
+        top: top_medio,
+        borderRadius: 200,
+        height: (largura_medio) * proporcao_medio,
+        width: (largura_medio) / 2.3,
+        borderWidth: 0,
+        rotation: -13,
+        borderColor: "#fff"
+    },
+    imagem_indicador: {
+        width: largura_indicador,
+        height: (largura_indicador) * proporcao_indicador,
+        borderWidth: 0,
+        borderColor: '#fff'
+    },
+    touchable_indicador: {
+        position: "absolute",
+        left: left_indicador,
+        top: top_indicador,
+        borderWidth: 0,
+        borderColor: "#fff"
+    },
+    imagem_polegar: {
+        position: "absolute",
+        left: left_polegar,
+        top: top_polegar,
+        width: largura_polegar,
+        height: (largura_polegar) * proporcao_polegar,
+        borderWidth: 0,
+        borderColor: '#fff'
+    },
+    touchable_polegar: {
+        position: "absolute",
+        left: left_t_polegar,
+        top: top_polegar,
+        borderRadius: 200,
+        height: (largura_polegar) * proporcao_polegar,
+        width: (largura_polegar) / 2,
+        borderWidth: 0,
+        rotation: 15,
+        borderColor: "#fff"
     },
     imagem_palma: {
         width: largura_palma,
         height: largura_palma * proporcao_palma,
         position: "absolute",
-        left: "15%",
-        top: 160,
+        left: left_palma,
+        top: top_palma,
         borderColor: '#fff',
-        borderWidth: 5
+        borderWidth: 0
 
     }
 
 })
 
 Main.navigationOptions = {
-    title: 'Main'
+    title: 'Main',
 }
 
 export default withSubscription({ subscriptionName: "events" })(Main);
