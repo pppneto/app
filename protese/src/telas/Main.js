@@ -331,60 +331,16 @@ class Main extends Component {
     };
 
     renderModal = (device, processing) => {
-        if (!device) return null;
-
-        const { id, name, connected } = device;
-
-        if (!processing) {
-            this.toggleDeviceConnection(device)
+            if (!device) return null;
+    
+            const { id, name, connected } = device;
+    
+            if(!processing){
+                this.toggleDeviceConnection(device)
+            }
+            //this.setState({device:null}) 
         }
-        this.setState({ device: null })
-        return (
-            <Modal
-                animationType="fade"
-                transparent={false}
-                visible={true}
-                onRequestClose={() => { }}
-            >
-                {device ? (
-                    <View
-                        style={{
-                            flex: 1,
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}
-                    >
-                        <Text style={{ fontSize: 18, fontWeight: "bold" }}>{name}</Text>
-                        <Text style={{ fontSize: 14 }}>{`<${id}>`}</Text>
-
-                        {processing && (
-                            <ActivityIndicator
-                                style={{ marginTop: 15 }}
-                                size={Platform.OS === "ios" ? 1 : 60}
-                            />
-                        )}
-
-                        {!processing && (
-                            <View style={{ marginTop: 20, width: "50%" }}>
-                                <Button
-                                    title={connected ? "Disconnect" : "Connect"}
-                                    style={{
-                                        backgroundColor: "#22509d"
-                                    }}
-                                    textStyle={{ color: "#fff" }}
-                                    onPress={() => this.toggleDeviceConnection(device)}
-                                />
-                                <Button
-                                    title="Close"
-                                    onPress={() => this.setState({ device: null })}
-                                />
-                            </View>
-                        )}
-                    </View>
-                ) : null}
-            </Modal>
-        );
-    }
+    
 
     montaMao() {
 
